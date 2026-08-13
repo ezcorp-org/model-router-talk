@@ -1,0 +1,17 @@
+{
+  "name": "@ezcorp/model-router",
+  "version": "1.0.0",
+  "description": "A small model router. Pure logic core, pluggable model client, runs in a browser or on a server.",
+  "type": "module",
+  "main": "./src/router/index.ts",
+  "types": "./src/router/index.ts",
+  "exports": {
+    ".": "./src/router/index.ts"
+  },
+  "scripts": {
+    "test": "bun test",
+    "typecheck": "tsc --noEmit"
+  },
+  "license": "MIT",
+  "sideEffects": false
+}

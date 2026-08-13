@@ -1,0 +1,44 @@
+/*
+ * Design tokens, copied from slides/slides.html.
+ *
+ * These values are the deck's. Do not tune them here and nowhere else: if a
+ * colour changes, change it in both places, or the talk and the site start
+ * looking like two different products.
+ *
+ * The notes below are the deck's own reasoning, kept because they explain
+ * choices that look arbitrary otherwise.
+ */
+:root {
+  /* warm dark neutral ramp */
+  --black: #0c0b0a;
+  --s1: #1a1917;
+  --s2: #252320;
+  --border: #3a3733;
+  --subtle: #b0aca6;
+  --text: #f0ede8;
+  --white: #faf9f7;
+
+  /* brand hues — action and emphasis only */
+  --yellow: #eec216;
+  --orange: #f29c1c;
+  --red: #db2547;
+
+  /* semantic */
+  --success: #2dbd72;
+  --info: #3b9ef5;
+
+  /* lanes: validated for colorblind separation on --s1.
+     orange is deliberately NOT a lane — orange vs yellow measures ΔE 9.3,
+     below the 15 legibility floor even with full colour vision. */
+  --fast: #3b9ef5;
+  --quality: #2dbd72;
+  --premium: #eec216;
+  --review: #b0aca6;
+
+  /* two dimmer greys the deck uses for labels and de-emphasis */
+  --dim: #7a756e;
+  --dimmer: #5f5a55;
+
+  --sans: "Space Grotesk", system-ui, -apple-system, "Segoe UI", sans-serif;
+  --mono: "JetBrains Mono", ui-monospace, "SF Mono", Menlo, Consolas, monospace;
+}

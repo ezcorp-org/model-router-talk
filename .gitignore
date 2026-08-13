@@ -1,0 +1,40 @@
+# dependencies
+node_modules/
+.pnp
+.pnp.js
+
+# build output
+dist/
+build/
+.svelte-kit/
+.wrangler/
+
+# environment and secrets
+.env
+.env.*
+!.env.example
+.dev.vars
+
+# editor and OS
+.DS_Store
+.idea/
+.vscode/*
+!.vscode/extensions.json
+*.swp
+
+# logs
+*.log
+npm-debug.log*
+yarn-error.log*
+
+# python leftovers
+__pycache__/
+*.pyc
+
+# agent and scratch files, none of which anyone needs to read the talk
+.claude/
+_to_delete/
+
+# plans and specs. Working notes, not study material: what they describe is
+# already in slides/, router/ and site/, which is what people came for.
+tasks

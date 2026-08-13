@@ -1,0 +1,50 @@
+#!/usr/bin/env bash
+#
+# Stop a push that would publish a broken or stale site.
+#
+# GitHub Pages serves docs/ straight from the repository, with no build step of
+# its own, so whatever is committed there IS the live site. That makes a stale
+# docs/ folder a silent failure: the code is fixed, the site is not, and nothing
+# says so. This hook rebuilds and refuses the push if the result differs from
+# what is committed.
+#
+# Install once:
+#   git config core.hooksPath .githooks
+#
+# Skip in an emergency:
+#   git push --no-verify
+
+set -euo pipefail
+
+root="$(git rev-parse --show-toplevel)"
+cd "$root"
+
+say() { printf '\033[1m%s\033[0m\n' "$*"; }
+fail() { printf '\033[31m%s\033[0m\n' "$*" >&2; exit 1; }
+
+command -v bun >/dev/null 2>&1 || fail "bun is not installed, so the checks cannot run."
+
+say "1/4  Tests"
+(cd router && bun test) || fail "Tests failed. Fix them before pushing."
+
+say "2/4  Types"
+(cd router && bunx tsc --noEmit) || fail "The router does not typecheck."
+(cd site && bunx svelte-check --tsconfig ./tsconfig.json --threshold error) \
+  || fail "The site does not typecheck."
+
+say "3/4  Build"
+(cd site && bun run build >/dev/null) || fail "The site did not build."
+
+say "4/4  Is docs/ up to date?"
+# Untracked files in docs/ count too: a brand new asset is just as stale.
+if [ -n "$(git status --porcelain -- docs)" ]; then
+  printf '\n'
+  git status --short -- docs
+  printf '\n'
+  fail "docs/ changed when it was rebuilt, so the committed site is out of date.
+Commit the rebuild and push again:
+
+    git add docs && git commit -m 'Rebuild site' && git push"
+fi
+
+say "All good."

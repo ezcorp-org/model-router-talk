@@ -1,0 +1,1233 @@
+<!DOCTYPE html>
+<html lang="en" data-theme="dark">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<title>Right Model. Right Task. | EZCorp</title>
+<!-- Inline icon, so the deck stays one self-contained file and asks for nothing. -->
+<link rel="icon" href="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 32 32'><rect width='32' height='32' rx='7' fill='%230C0B0A'/><rect x='7' y='8' width='18' height='4' rx='2' fill='%233B9EF5'/><rect x='7' y='14' width='13' height='4' rx='2' fill='%232DBD72'/><rect x='7' y='20' width='8' height='4' rx='2' fill='%23EEC216'/></svg>">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Space+Grotesk:wght@300;400;500;600;700&family=JetBrains+Mono:wght@400;500;700&display=swap" rel="stylesheet">
+<style>
+  :root{
+    /* warm dark neutral ramp */
+    --black:#0C0B0A; --s1:#1A1917; --s2:#252320; --border:#3A3733;
+    --subtle:#B0ACA6; --text:#F0EDE8; --white:#FAF9F7;
+    /* brand hues — action and emphasis only */
+    --yellow:#EEC216; --orange:#F29C1C; --red:#DB2547;
+    /* semantic */
+    --success:#2DBD72; --info:#3B9EF5;
+    /* lanes: validated for colorblind separation on --s1.
+       orange is deliberately NOT a lane — orange vs yellow measures ΔE 9.3,
+       below the 15 legibility floor even with full colour vision. */
+    --fast:#3B9EF5; --quality:#2DBD72; --premium:#EEC216; --review:#B0ACA6;
+
+    --sans:"Space Grotesk",system-ui,-apple-system,"Segoe UI",sans-serif;
+    --mono:"JetBrains Mono",ui-monospace,"SF Mono",Menlo,Consolas,monospace;
+  }
+  *{box-sizing:border-box;margin:0;padding:0}
+  html,body{height:100%}
+  body{background:var(--black);color:var(--text);font-family:var(--sans);
+       font-weight:400;overflow:hidden;-webkit-font-smoothing:antialiased}
+
+  #deck{height:100%;width:100%;position:relative}
+  .slide{position:absolute;inset:0;display:none;flex-direction:column;
+         justify-content:center;padding:5vh 7vw;background:var(--black)}
+  .slide.on{display:flex;animation:in .2s ease}
+  @keyframes in{from{opacity:0;transform:translateY(6px)}to{opacity:1;transform:none}}
+
+  /* eyebrow: uppercase mono, yellow, letter-spaced */
+  .eyebrow{font-family:var(--mono);font-size:.76rem;font-weight:500;
+           letter-spacing:.18em;text-transform:uppercase;color:var(--yellow);
+           margin-bottom:1.4rem}
+  .eyebrow.plain{color:var(--subtle)}
+
+  h1{font-size:clamp(2.4rem,5.4vw,4.6rem);line-height:1;letter-spacing:-.03em;
+     font-weight:700;color:var(--white)}
+  h2{font-size:clamp(1.7rem,3.2vw,2.7rem);line-height:1.1;letter-spacing:-.03em;
+     font-weight:700;color:var(--white);margin-bottom:1.6rem}
+  h3{font-family:var(--mono);font-size:.74rem;font-weight:500;letter-spacing:.16em;
+     text-transform:uppercase;color:var(--subtle);margin-bottom:.8rem}
+  p{font-size:clamp(1rem,1.4vw,1.28rem);line-height:1.6;color:var(--subtle);max-width:58ch}
+  p strong{color:var(--text);font-weight:600}
+  .lead{font-size:clamp(1.15rem,1.85vw,1.65rem);color:var(--text);max-width:48ch;
+        line-height:1.4;font-weight:400}
+
+  ul{list-style:none;display:flex;flex-direction:column;gap:.85rem;margin-top:.4rem}
+  li{font-size:clamp(.98rem,1.35vw,1.22rem);line-height:1.45;color:var(--subtle);
+     padding-left:1.5rem;position:relative;max-width:64ch}
+  li::before{content:"";position:absolute;left:0;top:.6em;width:7px;height:7px;
+             border-radius:2px;background:var(--border)}
+  li strong{color:var(--text);font-weight:600}
+
+  .quote{border-left:2px solid var(--border);padding-left:1.5rem;margin-top:1.8rem}
+  .quote p{color:var(--white);font-size:clamp(1.1rem,1.75vw,1.55rem);line-height:1.35;
+           font-weight:500;letter-spacing:-.01em;max-width:46ch}
+  .quote.hot{border-left-color:var(--yellow)}
+
+  /* badges: mono, uppercase, pill, 15% alpha tint */
+  .badges{display:flex;gap:.6rem;flex-wrap:wrap;margin-top:2.2rem}
+  .badge{font-family:var(--mono);font-size:.68rem;font-weight:500;letter-spacing:.12em;
+         text-transform:uppercase;padding:.4rem .8rem;border-radius:999px;
+         background:rgba(176,172,166,.14);color:var(--subtle)}
+  .badge.y{background:rgba(238,194,22,.15);color:var(--yellow)}
+  .badge.g{background:rgba(45,189,114,.15);color:var(--success)}
+  .badge.b{background:rgba(59,158,245,.15);color:var(--info)}
+  .badge.r{background:rgba(219,37,71,.15);color:var(--red)}
+
+  code,.mono{font-family:var(--mono)}
+  pre{background:var(--s1);border:1px solid var(--border);border-radius:10px;
+      padding:1.1rem 1.3rem;font-family:var(--mono);font-size:clamp(.78rem,1.1vw,1rem);
+      line-height:1.7;color:var(--text);overflow-x:auto;white-space:pre;font-weight:400}
+  /* brand code syntax: yellow keywords, orange strings, muted italic comments,
+     blue functions, red identifiers */
+  pre .c{color:#7A756E;font-style:italic}
+  pre .k{color:var(--yellow)}
+  pre .s{color:var(--orange)}
+  pre .f{color:var(--info)}
+  pre .i{color:#E8637F}
+  p code,li code,td code{background:var(--s2);border-radius:4px;padding:.1em .38em;
+      font-size:.88em;color:var(--text)}
+  .stack{display:flex;flex-direction:column;gap:.9rem;margin-top:1.2rem}
+
+  table{border-collapse:collapse;width:100%;margin-top:1.2rem;
+        font-size:clamp(.82rem,1.1vw,1.02rem)}
+  th{text-align:left;font-family:var(--mono);font-weight:500;color:var(--subtle);
+     font-size:.68rem;letter-spacing:.14em;text-transform:uppercase;
+     padding:0 1.1rem .8rem 0;border-bottom:1px solid var(--border)}
+  td{padding:.75rem 1.1rem .75rem 0;border-bottom:1px solid var(--s2);
+     color:var(--subtle);vertical-align:top;line-height:1.45}
+  td strong{color:var(--text);font-weight:600}
+  tbody tr:last-child td{border-bottom:none}
+  td.num,th.num{text-align:right;padding-right:0;font-variant-numeric:tabular-nums}
+  td.t{font-family:var(--mono);color:var(--subtle);font-size:.92em}
+  /* dense comparison table — the landscape slide */
+  table.dense{font-size:clamp(.7rem,.92vw,.86rem);margin-top:1rem}
+  table.dense th{font-size:.62rem;padding:0 .85rem .6rem 0}
+  table.dense td{padding:.55rem .85rem .55rem 0;line-height:1.4}
+  table.dense td.t{font-size:.86em;line-height:1.45}
+  table.dense tr.mine td{background:rgba(238,194,22,.06)}
+  table.dense tr.mine td:first-child strong{color:var(--yellow)}
+  .pro{color:var(--success)} .con{color:#C98A94}
+
+  .lane{display:inline-flex;align-items:center;gap:.5rem;font-family:var(--mono);
+        font-size:.82em;font-weight:500;letter-spacing:.06em;color:var(--text);white-space:nowrap}
+  .dot{width:10px;height:10px;border-radius:3px;flex:0 0 auto}
+  .d-fast{background:var(--fast)} .d-quality{background:var(--quality)}
+  .d-premium{background:var(--premium)} .d-review{background:var(--review)}
+
+  .cols{display:grid;grid-template-columns:1fr 1fr;gap:2.6rem;align-items:start}
+  .cols3{display:grid;grid-template-columns:repeat(3,1fr);gap:1.3rem;margin-top:1.5rem}
+  .card{background:var(--s1);border:1px solid var(--border);border-radius:10px;
+        padding:1.3rem 1.4rem;transition:transform .16s ease,border-color .16s ease}
+  .card:hover{transform:translateY(-2px)}
+  .card h3{margin-bottom:.7rem}
+  .card p{font-size:clamp(.85rem,1.1vw,1rem);max-width:none;line-height:1.5}
+  .card.pick{border-color:var(--yellow)}
+  .card.pick h3{color:var(--yellow)}
+  /* A number worth reading from the back of the room. Smaller than .big, which
+     owns a whole slide; this one has to share a card with a sentence. */
+  .card .stat{display:block;font-size:clamp(2rem,3.4vw,3.1rem);font-weight:700;
+              line-height:.95;letter-spacing:-.035em;color:var(--yellow);
+              margin-bottom:.45rem}
+  .card .stat+h3{margin-bottom:.7rem;color:var(--subtle);font-weight:500}
+
+  .flow{font-family:var(--mono);font-size:clamp(.74rem,1.05vw,.98rem);line-height:1.8;
+        color:var(--subtle);white-space:pre;font-weight:400}
+  .flow b{color:var(--text);font-weight:500}
+  .flow i{color:#7A756E;font-style:normal}
+
+  /* route card */
+  .rc{background:var(--s1);border:1px solid var(--border);border-radius:10px;
+      padding:1.3rem 1.5rem;font-family:var(--mono);font-weight:400;
+      font-size:clamp(.76rem,1.08vw,1rem);line-height:1.95;max-width:52rem}
+  .rc div{display:flex;gap:1rem}
+  .rc span.l{color:#7A756E;flex:0 0 8.5rem}
+  .rc span.v{color:var(--text)}
+  .rc .hi-fast{color:var(--fast);font-weight:700}
+  .rc .hi-quality{color:var(--quality);font-weight:700}
+  .rc .hi-premium{color:var(--premium);font-weight:700}
+  .rc .hi-review{color:var(--review);font-weight:700}
+  .rc .ok{color:var(--success)} .rc .bad{color:var(--red)}
+  .rc .dim{color:#7A756E}
+  /* A pattern shown on a card is the literal text from the file, so it gets the
+     same yellow the code blocks use for the part worth looking at. */
+  .rc code{color:var(--yellow)}
+
+  /* chart */
+  .chart{margin-top:1.5rem;max-width:56rem}
+  .legend{display:flex;gap:1.5rem;flex-wrap:wrap;margin-bottom:1.4rem;
+          font-family:var(--mono);font-size:.76rem;letter-spacing:.04em;color:var(--subtle)}
+  .legend span{display:inline-flex;align-items:center;gap:.5rem}
+  .row{margin-bottom:1.5rem}
+  .rowlab{display:flex;justify-content:space-between;align-items:baseline;
+          margin-bottom:.5rem;font-size:clamp(.85rem,1.1vw,1rem)}
+  .rowlab .n{color:var(--white);font-weight:600;font-family:var(--mono);
+             font-variant-numeric:tabular-nums}
+  .rowlab .t{color:var(--subtle)}
+  .bar{display:flex;height:32px;gap:2px;align-items:stretch}
+  .seg{position:relative;display:flex;align-items:center;justify-content:flex-end;
+       padding-right:.55rem;font-family:var(--mono);font-size:.74rem;font-weight:700;
+       color:var(--black);font-variant-numeric:tabular-nums;transition:filter .16s;cursor:default}
+  .seg:hover{filter:brightness(1.12)}
+  /* The one bar that is not a lane. Red is not a lane colour anywhere in this
+     deck, so it cannot be mistaken for one, and white reads better on it. */
+  .seg.worst{color:var(--white)}
+  .bar .seg:first-child{border-radius:4px 0 0 4px}
+  .bar .seg:last-child{border-radius:0 4px 4px 0}
+  .seg[data-tip]:hover::after{content:attr(data-tip);position:absolute;bottom:calc(100% + 8px);
+       right:0;background:var(--s2);border:1px solid var(--border);border-radius:8px;
+       padding:.5rem .75rem;font-family:var(--sans);font-size:.78rem;font-weight:400;
+       color:var(--text);white-space:nowrap;z-index:5;box-shadow:0 8px 24px rgba(0,0,0,.6)}
+  .axis{border-top:1px solid var(--border);display:flex;justify-content:space-between;
+        padding-top:.55rem;font-family:var(--mono);font-size:.72rem;color:#7A756E;
+        font-variant-numeric:tabular-nums}
+  .note{font-size:clamp(.78rem,.98vw,.9rem);color:#7A756E;margin-top:1.2rem;
+        max-width:62ch;line-height:1.55}
+  .note strong{color:var(--subtle);font-weight:600}
+  .note code{background:var(--s2);border-radius:4px;padding:.1em .38em;color:var(--subtle)}
+
+  /* flow chart */
+  .fc{margin-top:.6rem}
+  .fc-row{display:grid;grid-template-columns:repeat(4,1fr);gap:1.5rem;align-items:stretch}
+  .fc-row.rev{direction:rtl}
+  .fc-row.rev>*{direction:ltr}
+  /* NOTE: modifier is .route, not .lane — .lane is already the inline badge rule
+     above (display:inline-flex; align-items:center) and collided with it. */
+  .node{background:var(--s1);border:1px solid var(--border);border-radius:10px;
+        padding:.8rem .9rem;display:flex;flex-direction:column;align-items:stretch;
+        text-align:left;position:relative}
+  .node .n{font-family:var(--mono);font-size:.6rem;letter-spacing:.16em;color:#5F5A55;
+           margin-bottom:.4rem}
+  .node .h{font-size:clamp(.82rem,1.02vw,.98rem);font-weight:600;color:var(--text);
+           line-height:1.25;letter-spacing:-.01em}
+  .node .s{font-family:var(--mono);font-size:.66rem;color:#7A756E;line-height:1.45;
+           margin-top:.4rem}
+  .node.bad{border-color:rgba(219,37,71,.4)}
+  .node.bad .n{color:var(--red)}
+  .node.route .s{color:var(--quality)}
+  .node.fix{border-color:var(--yellow)}
+  .node.fix .h{color:var(--yellow)}
+  .node.fix .n{color:var(--yellow)}
+  /* connectors centred in the 1.5rem grid gap (half = .75rem) */
+  .fc-row .node::after{font-family:var(--mono);font-size:1.15rem;line-height:1;
+        color:#8A837A;position:absolute;top:50%}
+  .fc-row:not(.rev) .node:not(:last-child)::after{content:"→";left:100%;
+        margin-left:.75rem;transform:translate(-50%,-50%)}
+  .fc-row.rev .node:not(:last-child)::after{content:"←";right:100%;
+        margin-right:.75rem;transform:translate(50%,-50%)}
+  .fc-arrows{display:grid;grid-template-columns:repeat(4,1fr);gap:1.5rem;
+             font-family:var(--mono);font-size:1.15rem;color:#8A837A;height:1.4rem;
+             align-items:center;text-align:center}
+  .fc-down{grid-column:4;text-align:center}
+  .fc-loop{margin-top:.85rem;border:1px dashed var(--border);border-radius:8px;
+           padding:.6rem .9rem;font-family:var(--mono);font-size:.7rem;
+           letter-spacing:.05em;color:var(--subtle);display:flex;gap:.7rem;align-items:center}
+  .fc-loop b{color:var(--yellow);font-size:.95rem;font-weight:400}
+
+  /* octopus diagram */
+  .octo{width:100%;max-height:46vh;margin-top:.4rem;display:block}
+  .octo .head{fill:var(--s2);stroke:#8A837A;stroke-width:1.6}
+  .octo .eye{fill:#C3BEB5}
+  .octo .pupil{fill:var(--s1)}
+  .octo .arm{fill:none;stroke:#6B655C;stroke-width:6;stroke-linecap:round}
+  .octo .arm.hot{stroke:var(--yellow)}
+  .octo .cap{font-family:var(--mono);font-size:12px;letter-spacing:.14em;fill:#8A837A}
+  .octo .sub{font-family:var(--mono);font-size:11px;fill:#5F5A55}
+  .octo .armlab{font-family:var(--mono);font-size:13px;fill:var(--subtle)}
+  .octo .armlab.hot{fill:var(--yellow)}
+  .octo .link{fill:none;stroke:#4A463F;stroke-width:1.5;stroke-dasharray:4 4}
+  /* arms draw in on slide entry — "add a tool, add an arm" */
+  .octo .arm,.octo .armlab{stroke-dasharray:300;stroke-dashoffset:300}
+  .octo .armlab{stroke-dasharray:none;stroke-dashoffset:0;opacity:0}
+  .slide.on .octo .arm{animation:draw .42s ease forwards;animation-delay:var(--d,0s)}
+  .slide.on .octo .armlab{animation:fadein .3s ease forwards;
+                          animation-delay:calc(var(--d,0s) + .22s)}
+  @keyframes draw{to{stroke-dashoffset:0}}
+  @keyframes fadein{to{opacity:1}}
+  @media (prefers-reduced-motion:reduce){
+    .octo .arm{stroke-dashoffset:0}.octo .armlab{opacity:1}
+    .slide.on .octo .arm,.slide.on .octo .armlab{animation:none}
+  }
+
+  /* Build steps. Anything marked data-reveal stays hidden until the presenter
+     advances, so the room cannot read the answer before discussing it.
+     visibility:hidden keeps the space reserved, so nothing jumps when it
+     appears, and screen readers skip it until it is shown. */
+  [data-reveal]{visibility:hidden;opacity:0;transform:translateY(10px);
+                transition:opacity .3s ease,transform .3s ease}
+  [data-reveal].revealed{visibility:visible;opacity:1;transform:none}
+  .reveal-hint{font-family:var(--mono);font-size:.72rem;letter-spacing:.06em;
+               color:#5F5A55;transition:opacity .25s ease}
+  .slide.stepped .reveal-hint{opacity:0}
+  @media (prefers-reduced-motion:reduce){
+    [data-reveal],.reveal-hint{transition:none}
+  }
+  /* Printing has no way to advance, so show everything. */
+  @media print{[data-reveal]{visibility:visible;opacity:1;transform:none}}
+
+  .big{font-family:var(--sans);font-size:clamp(3.4rem,10vw,8.5rem);font-weight:700;
+       line-height:.9;letter-spacing:-.045em;color:var(--yellow)}
+  .sub{color:var(--subtle);font-size:clamp(.95rem,1.25vw,1.15rem);margin-top:1rem;max-width:40ch}
+
+  /* chrome */
+  #bar{position:fixed;left:0;bottom:0;height:2px;background:var(--yellow);
+       transition:width .2s ease;z-index:20}
+  #num,#seg{position:fixed;bottom:1.1rem;font-family:var(--mono);font-size:.7rem;
+            letter-spacing:.1em;color:#5F5A55;z-index:20}
+  #num{right:1.7rem;font-variant-numeric:tabular-nums}
+  #seg{left:1.7rem;text-transform:uppercase}
+  #logo{position:fixed;top:1.4rem;left:1.7rem;font-family:var(--mono);font-size:.72rem;
+        font-weight:700;letter-spacing:.1em;color:#5F5A55;z-index:20}
+  #logo b{color:var(--yellow)}
+  #help{position:fixed;top:1.4rem;right:1.7rem;font-family:var(--mono);font-size:.68rem;
+         letter-spacing:.08em;color:#5F5A55;z-index:20}
+  :focus-visible{outline:2px solid rgba(238,194,22,.5);outline-offset:3px}
+
+  @media (max-width:820px){
+    .cols,.cols3{grid-template-columns:1fr;gap:1.2rem}
+    .slide{padding:4vh 6vw}
+    .rc span.l{flex:0 0 6.5rem}
+  }
+  @media print{
+    body{overflow:visible;background:#fff}
+    .slide{display:flex!important;position:relative;height:100vh;page-break-after:always;
+           break-after:page;animation:none}
+    #bar,#num,#seg,#help,#logo{display:none}
+  }
+</style>
+</head>
+<body>
+<div id="deck">
+
+<!-- 1 -->
+<section class="slide" data-seg="Open · 0–2">
+  <div class="eyebrow">30 minutes · hands on · bring a laptop</div>
+  <h1>Right Model.<br>Right Task.</h1>
+  <p class="lead" style="margin-top:1.6rem">Build a program that picks the right AI
+     model for each job. It fits in one file. Nothing to install.</p>
+</section>
+
+<!-- 2 -->
+<section class="slide" data-seg="Open · 0–2">
+  <h2>Not every job needs an expert</h2>
+  <p class="lead">Think about how a help desk works. Easy questions get answered by
+     whoever picks up the phone. Hard ones get passed to a specialist. Nobody sends
+     every question to the most senior person in the building.</p>
+  <p style="margin-top:1.2rem">AI models work the same way. Small ones are quick and
+     cheap. Large ones cost more and take longer, but they are better at hard problems.
+     <strong>Most of the work people send to an AI is easy.</strong></p>
+  <div class="cols" style="margin-top:1.5rem">
+    <div class="card">
+      <h3>Send everything to the big model</h3>
+      <p>You pay far more than you need to, and everyone waits longer than they
+         should.</p>
+    </div>
+    <div class="card">
+      <h3>Send everything to the small model</h3>
+      <p>People start getting answers that are wrong, and nobody notices for a
+         while.</p>
+    </div>
+  </div>
+  <div class="quote hot" style="margin-top:1.5rem">
+    <p>A model router is the part that picks which one handles each request.</p>
+  </div>
+</section>
+
+<!-- 3 -->
+<section class="slide" data-seg="Open · 0–2">
+  <h2>What we will do in 30 minutes</h2>
+  <table>
+    <thead><tr><th style="width:6rem">Min</th><th>What we do</th><th>What you get</th></tr></thead>
+    <tbody>
+      <tr><td class="t">2&ndash;4</td><td><strong>Set it up</strong></td><td>Nothing to install, so this is quick</td></tr>
+      <tr><td class="t">4&ndash;10</td><td><strong>Watch it choose</strong></td><td>Three examples, running live</td></tr>
+      <tr><td class="t">10&ndash;17</td><td><strong>What routing means</strong></td><td>Why it has to guess before it spends</td></tr>
+      <tr><td class="t">17&ndash;20</td><td><strong>Where you have seen this before</strong></td><td>It matches tools you already use</td></tr>
+      <tr><td class="t">20&ndash;25</td><td><strong>Checks and second tries</strong></td><td>How it handles being wrong</td></tr>
+      <tr><td class="t">25&ndash;29</td><td><strong>Your turn</strong></td><td>One rule you wrote yourself</td></tr>
+      <tr><td class="t">29&ndash;30</td><td><strong>The bigger idea</strong></td><td>Where else this same shape fits</td></tr>
+    </tbody>
+  </table>
+  <p class="note">Setup comes first on purpose. The ideas are easier to follow once the
+     program is already running on your screen. After the 30 minutes there are six more
+     slides to take away. We will not go through those together.</p>
+</section>
+
+<!-- 4 -->
+<section class="slide" data-seg="Set up · 2–4">
+  <div class="eyebrow">Setup</div>
+  <h2>Get it running</h2>
+  <div class="stack">
+<pre><span class="c"># Nothing to install. Open the page and start typing.</span>
+<span class="s">talks.ezcorp.org</span>
+
+<span class="c"># Or run the same code on your own machine, no key needed</span>
+bun src/cli.ts --mock --demo</pre>
+  </div>
+  <p class="note">The page works straight away with demo answers, so nobody has to
+     install anything, and everything runs in your own browser. The playground there
+     lets you change any rule and watch the routing change as you type. To run it
+     yourself you need Bun, or Node version 22 and up with
+     <code>node --experimental-strip-types</code>. <code>--demo</code> runs the sample
+     requests; <code>--mock</code> is what lets it work with no key and no internet.
+     Drop <code>--mock</code> once you have set <code>CF_ACCOUNT_ID</code> and
+     <code>CF_API_TOKEN</code>.</p>
+</section>
+
+<!-- 5 -->
+<section class="slide" data-seg="See it work · 4–10">
+  <div class="eyebrow">Demo</div>
+  <h2>Three requests, three different models</h2>
+  <table>
+    <thead><tr><th>What the user asks</th><th style="width:10rem">Model chosen</th><th>Why</th></tr></thead>
+    <tbody>
+      <tr>
+        <td>"Pull the to-do items out of these meeting notes."</td>
+        <td><span class="lane"><i class="dot d-fast"></i>FAST</span></td>
+        <td>Simple job, and easy to check the answer</td>
+      </tr>
+      <tr>
+        <td>"Read this function and suggest five tests for it."</td>
+        <td><span class="lane"><i class="dot d-quality"></i>QUALITY</span></td>
+        <td>The model has to actually understand code</td>
+      </tr>
+      <tr>
+        <td>"Design a safe password reset process."</td>
+        <td><span class="lane"><i class="dot d-premium"></i>PREMIUM</span></td>
+        <td>Security work. Being wrong here is costly</td>
+      </tr>
+    </tbody>
+  </table>
+  <p class="note">Try these on the demo page, or run
+     <code>bun src/cli.ts --mock --demo</code></p>
+</section>
+
+<!-- 6 -->
+<section class="slide" data-seg="See it work · 4–10">
+  <h2>The program shows its work</h2>
+  <div class="rc">
+    <div><span class="l">Request</span><span class="v">Pull the to-do items out of these meeting notes...</span></div>
+    <div><span class="l">Chose</span><span class="v hi-fast">FAST</span></div>
+    <div><span class="l">Model</span><span class="v">llama-3.2-3b-instruct</span></div>
+    <div><span class="l">Because</span><span class="v">a job type rule matched <code>\bpull\b[^.?!]*\bout of\b</code></span></div>
+    <div><span class="l">Reason</span><span class="v">Simple job with a predictable answer, and easy to check</span></div>
+    <div><span class="l">Check</span><span class="v ok">PASSED</span></div>
+    <div><span class="l">Time</span><span class="v">1.4 seconds</span></div>
+    <div><span class="l">Cost</span><span class="v">$0.01</span></div>
+  </div>
+  <p class="note"><strong>That yellow line is the entire rule.</strong> Not a model, not
+     a guess: a search for the word "pull", then "out of" later in the same sentence. A
+     router starts as a list of lines like that one, checked in order, and it costs
+     nothing to run. Every choice prints a card like this, because if you cannot see why
+     it chose something, you cannot fix it when it chooses wrong.</p>
+</section>
+
+<!-- 7 -->
+<section class="slide" data-seg="See it work · 4–10">
+  <h2>When the cheap model fails</h2>
+  <div class="rc">
+    <div><span class="l">Request</span><span class="v">Give me the settings as JSON.</span></div>
+    <div><span class="l">Chose</span><span class="v hi-quality">QUALITY</span><span class="v dim">started with FAST, then moved up</span></div>
+    <div><span class="l">Because</span><span class="v">a job type rule matched "as JSON"</span></div>
+    <div><span class="l">Check</span><span class="v bad">FAILED on FAST. The JSON was broken</span></div>
+    <div><span class="l">&nbsp;</span><span class="v ok">PASSED on QUALITY. The JSON was valid</span></div>
+    <div><span class="l">Cost</span><span class="v">$0.06 across 2 tries</span></div>
+  </div>
+  <p style="margin-top:1.8rem">The first try failed and cost a cent. That is still
+     cheaper than starting with the most expensive model every time. More importantly,
+     <strong>the program noticed the problem on its own</strong> instead of a user
+     reporting it later.</p>
+</section>
+
+<!-- 8 -->
+<section class="slide" data-seg="See it work · 4–10">
+  <h2>The real question</h2>
+  <div class="quote hot">
+    <p>The question is not "which model is best?"<br><br>
+       It is "what is the cheapest option that still gets this right,
+       and how will I know if it didn't?"</p>
+  </div>
+</section>
+
+<!-- 9 -->
+<section class="slide" data-seg="What routing is · 10–17">
+  <div class="eyebrow">What routing is</div>
+  <h2>What model routing means</h2>
+  <p class="lead">Choosing which model should handle each request, and deciding
+     <strong>before</strong> you send it.</p>
+  <div class="flow" style="margin-top:1.8rem">A request comes in
+   │
+   ▼
+<b>The router</b>
+   │
+   ├──▶ Fast model      <i>cheap and quick, fine for most work</i>
+   ├──▶ Quality model   <i>slower, but thinks things through</i>
+   ├──▶ Premium model   <i>for hard problems where mistakes are costly</i>
+   └──▶ <b>HOLD</b>             <i>send nothing, because this text should stay private</i></div>
+  <p class="note">That last option matters. If the only choices are models, then the
+     program will happily send a private document to a company server without asking.
+     HOLD sends nothing and says why, and the request waits for a person.</p>
+</section>
+
+<!-- 10 -->
+<section class="slide" data-seg="What routing is · 10–17">
+  <h2>People use the word "routing" three ways</h2>
+  <div class="cols3">
+    <div class="card">
+      <h3>Gateway</h3>
+      <p>One doorway into many AI companies, so you only manage one connection.
+         You still choose the model yourself. Examples: OpenRouter, LiteLLM.</p>
+    </div>
+    <div class="card">
+      <h3>Fallback</h3>
+      <p>If one company's service goes down, try another one. This is about staying
+         online, not about picking the best model.</p>
+    </div>
+    <div class="card pick">
+      <h3>Dynamic &larr; today</h3>
+      <p>Look at each request and send it to the model that suits it. This is the
+         version that changes what you spend.</p>
+    </div>
+  </div>
+  <p class="note">All three are useful, and you can use them together. Only the third
+     one changes how much quality you get for your money.</p>
+</section>
+
+<!-- 11 -->
+<section class="slide" data-seg="What routing is · 10–17">
+  <h2>Why not just ask every model?</h2>
+  <p class="lead" style="margin-top:.4rem">Send it to all three, compare the answers,
+     keep the best one. It sounds like the version that wins on quality.</p>
+  <div class="cols3">
+    <div class="card">
+      <span class="stat">$0.26</span>
+      <h3>every request</h3>
+      <p>A cent for FAST, 5 for QUALITY, 20 for PREMIUM. Routing the same request averages 3 cents.</p>
+    </div>
+    <div class="card">
+      <span class="stat">slowest</span>
+      <h3>sets the speed</h3>
+      <p>Everyone waits for the biggest model, even on a job the small one finishes in a second.</p>
+    </div>
+    <div class="card">
+      <span class="stat">+1</span>
+      <h3>model, to judge</h3>
+      <p>Something has to pick the winner. That is one more call, and it can be wrong too.</p>
+    </div>
+  </div>
+  <div class="quote hot" style="margin-top:1.7rem">
+    <p>Asking all three costs more per request than sending everything to the most
+       expensive model. 26 cents against 20, before you pay the judge.</p>
+  </div>
+  <p class="note">So a router has to <strong>make a good guess before it spends
+     anything</strong>. It never gets to look at the answers first. That one restriction
+     is the whole problem.</p>
+</section>
+
+<!-- 12 -->
+<section class="slide" data-seg="What routing is · 10–17">
+  <h2>What this saves over 1,000 requests</h2>
+  <div class="chart">
+    <div class="legend">
+      <span><i class="dot d-fast"></i>FAST &middot; 700 requests &times; $0.01</span>
+      <span><i class="dot d-quality"></i>QUALITY &middot; 250 &times; $0.05</span>
+      <span><i class="dot d-premium"></i>PREMIUM &middot; 50 &times; $0.20</span>
+    </div>
+
+    <div class="row">
+      <!-- The breakdown moved out of the bar. At this scale each segment is
+           about 25 pixels wide, and three digits crammed into that is not
+           something anyone reads from the back of a room. -->
+      <div class="rowlab"><span class="t">With routing</span><span class="n">$7 + $12.50 + $10 = $29.50</span></div>
+      <div class="bar">
+        <div class="seg" style="width:2.69%;background:var(--fast)"
+             data-tip="FAST · 700 requests · $7"></div>
+        <div class="seg" style="width:4.81%;background:var(--quality)"
+             data-tip="QUALITY · 250 requests · $12.50"></div>
+        <div class="seg" style="width:3.85%;background:var(--premium)"
+             data-tip="PREMIUM · 50 requests · $10"></div>
+      </div>
+    </div>
+
+    <div class="row">
+      <div class="rowlab"><span class="t">Biggest model handles everything</span><span class="n">$200</span></div>
+      <div class="bar">
+        <div class="seg" style="width:76.92%;background:var(--premium)"
+             data-tip="1,000 requests × $0.20">$200</div>
+      </div>
+    </div>
+
+    <div class="row">
+      <div class="rowlab"><span class="t">Ask all three, keep the best answer</span><span class="n">$260</span></div>
+      <div class="bar">
+        <div class="seg worst" style="width:100%;background:var(--red)"
+             data-tip="1,000 requests × $0.26, before you pay the judge">$260</div>
+      </div>
+    </div>
+
+    <div class="axis"><span>$0</span><span>$130</span><span>$260</span></div>
+  </div>
+  <div class="quote hot" style="margin-top:1.4rem">
+    <p>Same 1,000 requests. <strong style="color:var(--white)">$29.50 instead of
+       $200.</strong></p>
+  </div>
+  <p class="note">These prices are made up. What is real is the gap between them, which
+     stays roughly similar across AI companies. The bottom bar is the idea from two
+     slides ago, drawn to scale: asking everyone costs more than always paying the most.</p>
+</section>
+
+<!-- 13 -->
+<section class="slide" data-seg="What routing is · 10–17">
+  <div class="big">85%</div>
+  <p class="sub">less than sending all 1,000 requests to the biggest model. But this is
+     still the wrong number to focus on.</p>
+  <div class="quote" style="margin-top:2.2rem">
+    <p>Getting the lowest price per request is easy.<br>
+       What you want is the lowest price
+       <strong style="color:var(--white)">per answer that is actually right</strong>.</p>
+  </div>
+  <p class="note">If you cut your bill in half but get 8% more wrong answers, you have
+     not saved anything. You have just moved the cost somewhere you are not counting.</p>
+</section>
+
+<!-- 14 -->
+<section class="slide" data-seg="What routing is · 10–17">
+  <h2>Four ways to build a router</h2>
+  <table>
+    <thead><tr><th style="width:15rem">Approach</th><th>How it decides</th><th>The catch</th></tr></thead>
+    <tbody>
+      <tr><td><strong>By feature</strong></td>
+          <td>Each button in your app uses a fixed model. The summarize button uses the small one, the writing button uses the big one.</td>
+          <td>Too rough. Requests inside one feature still vary a lot.</td></tr>
+      <tr><td><strong style="color:var(--yellow)">By written rules &larr; today</strong></td>
+          <td>You write rules that look for certain words and pick a model based on what they find.</td>
+          <td>The rules pile up and start to conflict. They also cannot improve on their own.</td></tr>
+      <tr><td><strong>By trained scoring</strong></td>
+          <td>You collect examples of which model did better, then train a small program to score new requests.</td>
+          <td>Based on real data, but it only handles two models well, and you retrain to change anything.</td></tr>
+      <tr><td><strong>By ranking</strong></td>
+          <td>Rank all your models for each request, the way a streaming service ranks what to show you next.</td>
+          <td>You need a solid testing setup first. In return it handles many models and keeps improving.</td></tr>
+    </tbody>
+  </table>
+  <p class="note">We build the second one today because you can read the whole thing in
+     one sitting. The list keeps going after that, and the later options hold up better
+     over time.</p>
+</section>
+
+<!-- 15 -->
+<section class="slide" data-seg="Familiar ground · 17–20">
+  <div class="eyebrow">A familiar idea</div>
+  <h2>You have seen this before</h2>
+  <div class="cols">
+    <div>
+      <h3>How websites handle traffic</h3>
+      <div class="flow">A visitor arrives
+   │
+   ▼
+<b>Traffic director</b>
+   │
+   ├──▶ Server A
+   ├──▶ Server B
+   └──▶ Server C</div>
+      <p class="note" style="margin-top:1.1rem">It decides using things like which
+         server is healthy, which is busy, and where the visitor is located.</p>
+    </div>
+    <div>
+      <h3>How model routing works</h3>
+      <div class="flow">A request arrives
+   │
+   ▼
+<b>Model router</b>
+   │
+   ├──▶ Fast model
+   ├──▶ Quality model
+   ├──▶ Premium model
+   └──▶ HOLD (send nothing)</div>
+      <p class="note" style="margin-top:1.1rem">It decides using things like how hard
+         the request is, how risky it is, how much it costs, and how private it is.</p>
+    </div>
+  </div>
+</section>
+
+<!-- 16 -->
+<section class="slide" data-seg="Familiar ground · 17–20">
+  <h2>The pieces line up almost exactly</h2>
+  <table>
+    <thead><tr><th>Website traffic</th><th>Model routing</th></tr></thead>
+    <tbody>
+      <tr><td>Traffic director</td><td><strong>The router</strong></td></tr>
+      <tr><td>A server</td><td><strong>A model</strong></td></tr>
+      <tr><td>Checking a server is healthy</td><td><strong>Checking the answer is good</strong></td></tr>
+      <tr><td>Trying the request again</td><td><strong>Trying a stronger model</strong></td></tr>
+      <tr><td>A backup server</td><td><strong>A backup model</strong></td></tr>
+      <tr><td>Taking a broken server offline</td><td><strong>Pausing a model that keeps failing</strong></td></tr>
+      <tr><td>A limit on how slow a page can be</td><td><strong>A limit on how long users wait</strong></td></tr>
+      <tr><td>A budget for how many errors are okay</td><td><strong>A budget for how many bad answers are okay</strong></td></tr>
+    </tbody>
+  </table>
+  <div class="quote" style="margin-top:1.5rem">
+    <p>Same idea you already know. It just uses different information to decide.</p>
+  </div>
+</section>
+
+<!-- 17 -->
+<section class="slide" data-seg="How it works · 20–25">
+  <div class="eyebrow plain">Models and harnesses</div>
+  <h2>The model is the head.<br>The harness is the arms.</h2>
+
+  <svg class="octo" viewBox="0 0 1200 340" role="img"
+       aria-label="On the left, an octopus head with no arms, labelled MODEL, all brain and no reach. On the right, the same head with eight arms, labelled MODEL PLUS HARNESS. The arms are prompt, context, tools, permissions, router, evaluator, retries and escalation, and logging. Router, evaluator and retries are highlighted as the parts built in this workshop.">
+
+    <g transform="translate(180,120)">
+      <path class="head" d="M -66,10 C -66,-36 -38,-62 0,-62 C 38,-62 66,-36 66,10
+                            C 66,40 38,54 0,54 C -38,54 -66,40 -66,10 Z"/>
+      <ellipse class="eye" cx="-27" cy="-6" rx="14" ry="10.5"/>
+      <ellipse class="eye" cx="27" cy="-6" rx="14" ry="10.5"/>
+      <rect class="pupil" x="-35.5" y="-9.5" width="17" height="6.5" rx="3.2"/>
+      <rect class="pupil" x="18.5" y="-9.5" width="17" height="6.5" rx="3.2"/>
+    </g>
+    <text class="cap" x="180" y="215" text-anchor="middle">MODEL</text>
+    <text class="sub" x="180" y="236" text-anchor="middle">it can think, but it cannot reach</text>
+
+    <path class="link" d="M 300,120 L 372,120"/>
+    <path d="M 372,120 l -9,-5 l 0,10 Z" fill="#4A463F"/>
+    <text class="sub" x="336" y="105" text-anchor="middle">add arms</text>
+
+    <g class="arms">
+      <path class="arm" style="--d:.00s" d="M 702,146 C 672,142 645,124 618,100"/>
+      <path class="arm" style="--d:.07s" d="M 714,162 C 682,168 640,160 600,150"/>
+      <path class="arm" style="--d:.14s" d="M 732,171 C 698,192 650,208 612,205"/>
+      <path class="arm" style="--d:.21s" d="M 750,174 C 728,215 690,250 648,258"/>
+      <path class="arm" style="--d:.28s" d="M 770,174 C 792,215 830,250 872,258"/>
+      <path class="arm hot" style="--d:.35s" d="M 788,171 C 822,192 870,208 908,205"/>
+      <path class="arm hot" style="--d:.42s" d="M 806,162 C 838,168 880,160 920,150"/>
+      <path class="arm hot" style="--d:.49s" d="M 818,146 C 848,142 875,124 902,100"/>
+    </g>
+
+    <g transform="translate(760,120)">
+      <path class="head" d="M -66,10 C -66,-36 -38,-62 0,-62 C 38,-62 66,-36 66,10
+                            C 66,40 38,54 0,54 C -38,54 -66,40 -66,10 Z"/>
+      <ellipse class="eye" cx="-27" cy="-6" rx="14" ry="10.5"/>
+      <ellipse class="eye" cx="27" cy="-6" rx="14" ry="10.5"/>
+      <rect class="pupil" x="-35.5" y="-9.5" width="17" height="6.5" rx="3.2"/>
+      <rect class="pupil" x="18.5" y="-9.5" width="17" height="6.5" rx="3.2"/>
+    </g>
+
+    <text class="armlab" style="--d:.00s" x="604" y="104" text-anchor="end">instructions</text>
+    <text class="armlab" style="--d:.07s" x="586" y="154" text-anchor="end">background info</text>
+    <text class="armlab" style="--d:.14s" x="598" y="209" text-anchor="end">tools</text>
+    <text class="armlab" style="--d:.21s" x="634" y="262" text-anchor="end">permissions</text>
+    <text class="armlab" style="--d:.28s" x="886" y="262">record keeping</text>
+    <text class="armlab hot" style="--d:.35s" x="922" y="209">second tries</text>
+    <text class="armlab hot" style="--d:.42s" x="934" y="154">answer checking</text>
+    <text class="armlab hot" style="--d:.49s" x="916" y="104">the router</text>
+
+    <text class="cap" x="760" y="306" text-anchor="middle">MODEL + HARNESS</text>
+  </svg>
+
+  <p class="note" style="margin-top:.2rem">A model on its own can think, but it cannot
+     do anything. The harness is all the code around it that lets it act. Every tool or
+     check you add is one more arm, and the head and the arms are both useless without
+     each other. <strong>The three yellow arms are the parts we build today.</strong></p>
+</section>
+
+<!-- 18 -->
+<section class="slide" data-seg="How it works · 20–25">
+  <h2>The order the program checks things</h2>
+  <div class="flow">A request arrives
+   │
+   ▼
+<b>1. Safety rules</b>            <i>security, privacy, legal, payments</i>
+   │                      └──▶ send to PREMIUM, or hold it back entirely
+   ▼
+<b>2. Simple job rules</b>        <i>clearly easy work, or clearly hard work</i>
+   │                      └──▶ pick FAST or QUALITY, at no cost
+   ▼
+<b>3. Length check</b>            <i>over 1,000 characters</i>
+   │                      └──▶ send to QUALITY, still at no cost
+   ▼
+<b>4. The chooser decides</b>     <i>a small model, only if no rule matched</i>
+   │                      └──▶ picks FAST, QUALITY or PREMIUM, as JSON
+   ▼
+<b>5. Send it to the model</b>
+   │
+   ▼
+<b>6. Check the answer</b>
+   ├──▶ looks good ──▶ return it to the user
+   └──▶ looks wrong ──▶ try the next model up</div>
+  <p class="note">This is the router arm from the last slide, opened up. The order is
+     deliberate: the first three steps are free and always behave the same way, so they
+     run before the one that costs money. Notice how little the chooser does. It never
+     solves the problem, and it is never offered HOLD &mdash; whether something is too
+     private to send stays a rule a person wrote down.</p>
+</section>
+
+<!-- 19 -->
+<section class="slide" data-seg="How it works · 20–25">
+  <h2>What does checking an answer mean?</h2>
+  <p style="max-width:64ch">The whole idea rests on catching a bad answer before a
+     person sees it. That sounds hard. Mostly it is not.</p>
+  <table>
+    <thead><tr>
+      <th>What you asked for</th>
+      <th>How you check it</th>
+      <th style="width:9rem">What it costs</th>
+    </tr></thead>
+    <tbody>
+      <tr><td>Some JSON</td><td>Try to read it as JSON. If that fails, it is broken.</td><td class="t">free</td></tr>
+      <tr><td>Working code</td><td>Run your tests against it.</td><td class="t">free</td></tr>
+      <tr><td>Exactly five ideas</td><td>Count them.</td><td class="t">free</td></tr>
+      <tr><td>A short summary</td><td>Check it is actually shorter than what you gave it.</td><td class="t">free</td></tr>
+      <tr><td>Anything at all</td><td>Is it empty, cut off halfway, or a refusal?</td><td class="t">free</td></tr>
+      <tr><td>Something subtle</td><td>Ask a stronger model whether the answer is any good.</td><td class="t">one more call</td></tr>
+    </tbody>
+  </table>
+  <div class="quote hot" style="margin-top:1.3rem">
+    <p>If you cannot describe how you would check the answer, that is worth noticing.
+       It usually means a person still needs to look at it.</p>
+  </div>
+</section>
+
+<!-- 20 -->
+<section class="slide" data-seg="Your turn · 25–29">
+  <div class="eyebrow">Your turn</div>
+  <h2>Add one rule of your own</h2>
+  <p>On <span class="s">talks.ezcorp.org</span>, open <strong>Advanced</strong> in the
+     playground and find <code>POLICY_RULES</code> or <code>TASK_RULES</code>. Add one
+     pattern to a list. None of these is in there yet, so you will see the routing
+     change:</p>
+  <ul style="margin-top:1.3rem">
+    <li><code>invoice</code>, <code>refund</code> or <code>chargeback</code> goes to PREMIUM</li>
+    <li><code>privacy</code> or <code>home address</code> is held back and never sent</li>
+    <li><code>ELI5</code> goes to FAST</li>
+    <li><code>benchmark</code> or <code>latency</code> goes to QUALITY</li>
+    <li>Or change no rule at all: drop <code>LONG_REQUEST_CHARS</code> from 1,000 to 300
+        and see what moves</li>
+  </ul>
+  <p class="note">Read the lists before you add to them. <code>production</code>,
+     <code>medical</code> and asking for JSON are already covered, and finding that out
+     is half the exercise. Type a request and watch which model it picks before you
+     press send, so it costs nothing. Running the code yourself? Same lists live in
+     <code>src/router/config.ts</code>; test with
+     <code>bun src/cli.ts --mock "your request here"</code>.</p>
+</section>
+
+<!-- 21 -->
+<section class="slide" data-seg="Your turn · 25–29">
+  <h2>One last example to discuss</h2>
+  <pre style="margin-bottom:1.8rem">I need a plan to switch our login system over to passkeys
+without locking out the people who already have accounts.</pre>
+  <div class="cols">
+    <div>
+      <h3>Talk it through</h3>
+      <ul>
+        <li>Which model should handle this, or should a person?</li>
+        <li>Which of the six steps decides it, and does the chooser ever run?</li>
+        <li>How would you check whether the answer is any good?</li>
+        <li>Would you send this text to another company at all?</li>
+      </ul>
+    </div>
+    <div>
+      <h3>What the program does</h3>
+      <p class="reveal-hint">Decide as a group first. Then press the right arrow.</p>
+      <div data-reveal>
+        <div class="rc" style="font-size:.8rem;line-height:1.85">
+          <div><span class="l" style="flex:0 0 5.5rem">Chose</span><span class="v hi-premium">PREMIUM</span></div>
+          <div><span class="l" style="flex:0 0 5.5rem">At step</span><span class="v">1 of 6, a safety rule, on the word "passkeys"</span></div>
+          <div><span class="l" style="flex:0 0 5.5rem">Reason</span><span class="v">Security, logins or payments, where mistakes are costly</span></div>
+          <div><span class="l" style="flex:0 0 5.5rem">Chooser</span><span class="v dim">never ran, so deciding cost nothing</span></div>
+        </div>
+        <p class="note">Right answer, and free to reach. But one word did all the work:
+           "locking out", "switch over" and "people who already have accounts" were never
+           read. Ask the room the same request as <strong>"move everyone to
+           phishing-resistant sign-in"</strong>. No rule matches, so it falls to the
+           chooser &mdash; and that is the honest limit of a word list.</p>
+      </div>
+    </div>
+  </div>
+</section>
+<!-- 22 -->
+<section class="slide" data-seg="The bigger idea · 29–30">
+  <div class="eyebrow plain">The bigger idea</div>
+  <h2>What you actually learned today</h2>
+  <div class="cols" style="align-items:center">
+    <div>
+      <p>You learned how to build something that <strong>decides where work should
+         go</strong>. Today the choices were AI models, but the program does not really
+         care what the choices are.</p>
+      <p style="margin-top:.9rem">Here is the shape of it, and it stays the same no
+         matter what you are sorting:</p>
+<pre style="margin-top:1rem">look at it  <span class="c"># how hard, how risky, how private?</span>
+choose      <span class="c"># pick from your list of options</span>
+check       <span class="c"># did that actually work?</span>
+try again   <span class="c"># if not, use a stronger option</span>
+learn       <span class="c"># bad results improve the rules</span></pre>
+      <p class="note" style="margin-top:.9rem">Any time you have several places work
+         could go, and the work varies in difficulty, this pattern fits. Swap the
+         options and keep the shape. The slides after this one show how bad results
+         feed back in and improve the rules.</p>
+    </div>
+    <div>
+      <table class="dense" style="margin-top:0">
+        <thead><tr><th>Sort these</th><th>Between</th><th>How you check</th></tr></thead>
+        <tbody>
+          <tr class="mine">
+            <td><strong>Requests</strong> &larr; today</td>
+            <td class="t">fast / quality / premium / hold</td>
+            <td>check the answer, try again if needed</td>
+          </tr>
+          <tr>
+            <td><strong>Jobs</strong></td>
+            <td class="t">chatbot, coding assistant, workflow tool</td>
+            <td>did it finish the job?</td>
+          </tr>
+          <tr>
+            <td><strong>Tool choices</strong></td>
+            <td class="t">40 tools, pick the right one</td>
+            <td>did it return what it promised?</td>
+          </tr>
+          <tr>
+            <td><strong>Questions</strong></td>
+            <td class="t">your database, your documents, the web</td>
+            <td>did that source have the answer?</td>
+          </tr>
+          <tr>
+            <td><strong>Support tickets</strong></td>
+            <td class="t">bot, support team, specialist, legal</td>
+            <td>how often does it get reopened?</td>
+          </tr>
+          <tr>
+            <td><strong>Alerts</strong></td>
+            <td class="t">phone call, chat message, daily summary, ignore</td>
+            <td>did anyone actually act on it?</td>
+          </tr>
+        </tbody>
+      </table>
+    </div>
+  </div>
+</section>
+
+
+<!-- 23 -->
+<section class="slide" data-seg="Take home">
+  <div class="eyebrow plain">Putting it together</div>
+  <h2>Bad answers help you improve</h2>
+
+  <div class="fc">
+    <div class="fc-row">
+      <div class="node">
+        <span class="n">01 · REQUEST</span>
+        <span class="h">A user sends a request</span>
+        <span class="s">no rule clearly covers it</span>
+      </div>
+      <div class="node route">
+        <span class="n">02 · CHOOSE</span>
+        <span class="h">Router picks QUALITY</span>
+        <span class="s">the choice gets saved</span>
+      </div>
+      <div class="node">
+        <span class="n">03 · ANSWER</span>
+        <span class="h">The answer goes out</span>
+        <span class="s">it passes the checks but is still wrong</span>
+      </div>
+      <div class="node bad">
+        <span class="n">04 · REPORT</span>
+        <span class="h">The user marks it bad</span>
+        <span class="s">one click</span>
+      </div>
+    </div>
+
+    <div class="fc-arrows"><span></span><span></span><span></span><span class="fc-down">↓</span></div>
+
+    <div class="fc-row rev">
+      <div class="node bad">
+        <span class="n">05 · ADD IT UP</span>
+        <span class="h">Too many complaints</span>
+        <span class="s">over half were marked bad in one day</span>
+      </div>
+      <div class="node">
+        <span class="n">06 · ALERT</span>
+        <span class="h">The team gets told</span>
+        <span class="s">including which requests failed</span>
+      </div>
+      <div class="node">
+        <span class="n">07 · LEARN</span>
+        <span class="h">Look at what went wrong</span>
+        <span class="s">the failures were saved, so you have them</span>
+      </div>
+      <div class="node fix">
+        <span class="n">08 · FIX</span>
+        <span class="h">Point it somewhere better</span>
+        <span class="s">this kind of request now goes to PREMIUM</span>
+      </div>
+    </div>
+
+    <div class="fc-loop">
+      <b>↺</b>
+      <span>The next request like it goes to the stronger model. Same program, one
+        setting changed, and the problem is fixed.</span>
+    </div>
+  </div>
+</section>
+
+<!-- 24 -->
+<section class="slide" data-seg="Take home">
+  <h2>Two things to be honest about</h2>
+  <div class="cols">
+    <div>
+      <h3>Half your users complaining is very late</h3>
+      <p>By the time half your users are unhappy, you have already sent out a lot of
+         bad answers. A number that high only catches a total breakdown. To catch
+         smaller problems you want a much lower limit, plus the idea of sending a small
+         share of traffic to every model and comparing, which finds problems before
+         anyone complains.</p>
+      <p class="note">Also watch how many requests you are counting. Half of six
+         requests is not a real signal.</p>
+    </div>
+    <div>
+      <h3>"Learning" means two different things</h3>
+      <p>In the program we built today, step 07 is <strong>you editing a rule by
+         hand</strong>. That is quick and easy to review, but it does not hold up as
+         the system grows.</p>
+      <p style="margin-top:.9rem">Once you move up to a trained program, step 07 becomes
+         automatic, and that is when the whole loop can run without a person in it.</p>
+      <p class="note">That is the real reason to move past word matching. The rules are
+         not wrong. They just cannot learn from step 04 on their own.</p>
+    </div>
+  </div>
+</section>
+
+<!-- 25 -->
+<section class="slide" data-seg="Take home">
+  <h2>What to do next</h2>
+  <ul>
+    <li><strong>Save every decision.</strong> You cannot improve something you are not
+        measuring. Those little cards the program prints are the start of a useful
+        record.</li>
+    <li><strong>Test a small share of traffic.</strong> Send about 1 in 100 requests to
+        every model and compare the answers. This is how you find out your rules are
+        wrong.</li>
+    <li><strong>Move past word matching.</strong> Once you have that record, a trained
+        program will beat your word list, and you will not have to rewrite it every
+        time a new model comes out.</li>
+    <li><strong>Keep the option to hold things back.</strong> That is the one part a
+        better model never replaces.</li>
+  </ul>
+</section>
+
+<!-- 26 -->
+<section class="slide" data-seg="Take home">
+  <div class="eyebrow plain">Worth saving a photo of</div>
+  <h2>Tools you can use for this</h2>
+  <table class="dense">
+    <thead><tr>
+      <th style="width:13rem">Approach</th>
+      <th style="width:11rem">Examples</th>
+      <th>Good</th>
+      <th>Not so good</th>
+    </tr></thead>
+    <tbody>
+      <tr class="mine">
+        <td><strong>Rules you write</strong><br>what we built today</td>
+        <td class="t">this workshop<br>on Workers AI</td>
+        <td class="pro">Free. Easy to read. You can finish it today, and a teammate can review every decision.</td>
+        <td class="con">The rules pile up and conflict. They cannot improve on their own.</td>
+      </tr>
+      <tr>
+        <td><strong>Hosted gateway</strong><br>you still pick the model</td>
+        <td class="t">OpenRouter<br>Requesty<br>CF AI Gateway</td>
+        <td class="pro">Nothing to run yourself. Hundreds of models through one connection, including new ones on day one.</td>
+        <td class="con">Your text passes through another company. There are fees, and limited reporting.</td>
+      </tr>
+      <tr>
+        <td><strong>Gateway you run</strong></td>
+        <td class="t">LiteLLM<br>Portkey core</td>
+        <td class="pro">Free and open source. Your data stays with you. You can set spending limits per team.</td>
+        <td class="con">You have to run and maintain the servers it needs.</td>
+      </tr>
+      <tr>
+        <td><strong>Trained router</strong><br>open source</td>
+        <td class="t">RouteLLM<br>RoRF · LLMRouter</td>
+        <td class="pro">Decides from real data instead of guesswork. Fits inside a gateway you already run.</td>
+        <td class="con">It only chooses models. It does not handle backups, keys, or reporting. Published savings come from someone else's traffic, not yours.</td>
+      </tr>
+      <tr>
+        <td><strong>Paid routing service</strong></td>
+        <td class="t">Not Diamond<br>Martian · Unify</td>
+        <td class="pro">Decides per request. Handles many models. You can shift the cost and quality balance without retraining.</td>
+        <td class="con">Only worth it if you test your results properly. You depend on their service, and it adds a delay.</td>
+      </tr>
+      <tr>
+        <td><strong>Router you host</strong></td>
+        <td class="t">vLLM Semantic&nbsp;Router</td>
+        <td class="pro">Runs entirely on your own machines, so you decide what leaves your network.</td>
+        <td class="con">Heavy to set up and maintain. This is real infrastructure, not a small script.</td>
+      </tr>
+    </tbody>
+  </table>
+  <p class="note" style="margin-top:1rem;max-width:none">The first row is "by written
+     rules" from the four approaches; the trained router and the paid service are the
+     last two. These work together, and putting a
+     trained router inside a gateway you run is a normal setup. <strong>One warning
+     about all of them: their dashboards show you cost, not quality.</strong> A router
+     that quietly sends work to weaker models will look like a success on the bill.</p>
+</section>
+
+
+<!-- 27 -->
+<section class="slide" data-seg="Close">
+  <h2>Send work to the right place.<br>Check the result.<br>Try again when it fails.</h2>
+  <p style="margin-top:1.4rem">Small models make everyday work feel fast. Big models
+     protect you when the work is genuinely hard. The router knows which is which, and
+     <strong>the check is the part that catches it when the router guesses wrong</strong>.</p>
+  <div class="badges" style="margin-top:2.4rem">
+    <span class="badge y">Make it EZ</span>
+    <span class="badge">the code</span>
+    <span class="badge">README.md</span>
+    <span class="badge">these slides</span>
+  </div>
+</section>
+
+<!-- 28 -->
+<section class="slide" data-seg="Close">
+  <div class="eyebrow plain">Reference</div>
+  <h2>Sources</h2>
+  <ul>
+    <li>The four approaches to building a router, the point about deciding before you
+        spend, and the argument for systems that keep learning all come from
+        <strong>"How to Build Your Own Model Router"</strong> by Tom&aacute;s Hernando
+        Kofman of Not Diamond, presented at AI Council.</li>
+    <li>Model names were checked against
+        <code>developers.cloudflare.com/workers-ai/models</code>. The tools table came
+        from company documentation and Not Diamond's
+        <code>awesome-ai-model-routing</code> list. Check it again before you commit to
+        anything, because this area changes quickly.</li>
+    <li>The prices are made up, chosen to show the size of the difference.
+        They are not real prices from any company.</li>
+    <li>The colours are tested so they stay distinct for people with colour blindness.
+        Orange is left out on purpose, because next to yellow it is hard to tell apart.</li>
+  </ul>
+</section>
+
+</div>
+
+<div id="bar"></div>
+<div id="logo"><b>EZ</b>CORP</div>
+<div id="num"></div><div id="seg"></div>
+<div id="help">&larr; &rarr; &nbsp;·&nbsp; F fullscreen &nbsp;·&nbsp; Home first slide</div>
+
+<script>
+(function(){
+  var s = [].slice.call(document.querySelectorAll('.slide')), i = 0;
+  var bar = document.getElementById('bar'), num = document.getElementById('num'),
+      seg = document.getElementById('seg'), help = document.getElementById('help');
+
+  // Remember the slide across a refresh.
+  // Two independent mechanisms, because neither works everywhere:
+  //   1. the #n in the address bar  (works on refresh, and for sharing a link)
+  //   2. a saved value in the browser (works even when the address has no #n,
+  //      e.g. opening the file fresh, or a preview pane that drops it)
+  // Both are wrapped in try/catch: some embedded viewers block them, and a
+  // blocked call must not stop the slides from working.
+  var SAVE_KEY = 'ezcorp-router-deck-slide';
+
+  function saveSlide(n){
+    try { window.localStorage.setItem(SAVE_KEY, String(n)); } catch (e) {}
+  }
+  function loadSlide(){
+    try {
+      var v = parseInt(window.localStorage.getItem(SAVE_KEY), 10);
+      return (v >= 1 && v <= s.length) ? v : null;
+    } catch (e) { return null; }
+  }
+  function hashSlide(){
+    var v = parseInt((location.hash || '').slice(1), 10);
+    return (v >= 1 && v <= s.length) ? v : null;
+  }
+
+  // How many build steps are currently showing on this slide.
+  var step = 0;
+
+  function stepsOf(el){
+    return [].slice.call(el.querySelectorAll('[data-reveal]'));
+  }
+
+  function paintSteps(){
+    stepsOf(s[i]).forEach(function(el, k){
+      el.classList.toggle('revealed', k < step);
+    });
+    s[i].classList.toggle('stepped', step > 0);
+  }
+
+  // fromAhead: true when arriving from a later slide. The room has already
+  // seen the build, so show all of it rather than making them click again.
+  function show(n, fromAhead){
+    i = Math.max(0, Math.min(s.length - 1, n));
+    s.forEach(function(el,k){ el.classList.toggle('on', k === i); });
+    step = fromAhead ? stepsOf(s[i]).length : 0;
+    paintSteps();
+    bar.style.width = ((i+1)/s.length*100) + '%';
+    num.textContent = (i+1) + ' / ' + s.length;
+    seg.textContent = s[i].dataset.seg || '';
+    if (i > 0) help.style.display = 'none';
+    try {
+      if (location.hash !== '#'+(i+1)) history.replaceState(null, '', '#'+(i+1));
+    } catch (e) {}
+    saveSlide(i + 1);
+  }
+
+  // Advance one build step if this slide has one waiting, otherwise change slide.
+  function forward(){
+    if (step < stepsOf(s[i]).length){ step++; paintSteps(); return; }
+    show(i + 1);
+  }
+  function back(){
+    if (step > 0){ step--; paintSteps(); return; }
+    show(i - 1, true);
+  }
+
+  document.addEventListener('keydown', function(e){
+    if (e.key === 'ArrowRight' || e.key === 'ArrowDown' || e.key === ' ' || e.key === 'PageDown'){
+      e.preventDefault(); forward();
+    } else if (e.key === 'ArrowLeft' || e.key === 'ArrowUp' || e.key === 'PageUp'){
+      e.preventDefault(); back();
+    } else if (e.key === 'Home'){
+      if (e.shiftKey) { try { window.localStorage.removeItem(SAVE_KEY); } catch (err) {} }
+      show(0);
+    }
+    else if (e.key === 'End'){ show(s.length-1, true); }
+    else if (e.key === 'f' || e.key === 'F'){
+      if (document.fullscreenElement) document.exitFullscreen();
+      else document.documentElement.requestFullscreen();
+    }
+  });
+
+  document.addEventListener('click', function(e){
+    if (e.target.closest('a, pre, .seg')) return;
+    if (e.clientX < innerWidth * 0.25) back(); else forward();
+  });
+
+  var x0 = null;
+  document.addEventListener('touchstart', function(e){ x0 = e.touches[0].clientX; }, {passive:true});
+  document.addEventListener('touchend', function(e){
+    if (x0 === null) return;
+    var dx = e.changedTouches[0].clientX - x0;
+    if (Math.abs(dx) > 50){ if (dx < 0) forward(); else back(); }
+    x0 = null;
+  }, {passive:true});
+
+  window.addEventListener('hashchange', function(){
+    var n = parseInt((location.hash||'#1').slice(1), 10) - 1;
+    if (!isNaN(n) && n !== i) show(n);
+  });
+
+  // On load: an explicit #n in the address wins, then the remembered slide,
+  // then slide 1. Shift+Home clears the memory and starts over.
+  show((hashSlide() || loadSlide() || 1) - 1);
+})();
+</script>
+</body>
+</html>

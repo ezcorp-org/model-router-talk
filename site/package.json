@@ -1,0 +1,21 @@
+{
+  "name": "@ezcorp/model-router-site",
+  "version": "1.0.0",
+  "private": true,
+  "description": "The model router talk and playground. Static, no backend.",
+  "type": "module",
+  "scripts": {
+    "dev": "vite",
+    "build": "vite build",
+    "preview": "vite preview",
+    "typecheck": "svelte-check --tsconfig ./tsconfig.json"
+  },
+  "devDependencies": {
+    "@sveltejs/vite-plugin-svelte": "^5.0.3",
+    "@types/node": "^26.1.2",
+    "svelte": "^5.19.0",
+    "svelte-check": "^4.1.4",
+    "typescript": "^5.7.3",
+    "vite": "^6.0.11"
+  }
+}
