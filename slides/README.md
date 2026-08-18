@@ -24,7 +24,7 @@ until you advance. Printing shows everything, since paper has no arrow key.
 
 ### The last few slides are reference
 
-The 30 minutes ends on **"What you actually learned today"**, slide 22. Do not skip
+The 30 minutes ends on **"What you actually learned today"**, slide 19. Do not skip
 that one to save a minute: it is the point of the whole session, the moment routing
 stops being about AI models and becomes a shape they can reuse. Everything after it,
 the feedback loop, the two honest caveats, what to do next and the tool comparison, is
@@ -219,7 +219,7 @@ a person wrote down.
 
 ---
 
-## The exercise, 25 to 29 minutes
+## The exercise, 21 to 29 minutes
 
 Most of the room does this in the browser: on <https://talks.ezcorp.org>, open
 **Advanced** in the playground, which holds the same rule lists. The slide leads with
@@ -363,15 +363,56 @@ want to end up:
 1. **Save every decision.** Those printed cards are the start of a useful record.
 2. **Test a small share of traffic.** Send about 1 in 100 requests to every model and
    compare. This is how you find out your rules are wrong.
-3. **Train a scoring program** on that record. It decides from real data, but it only
-   handles two models well and freezes until you retrain it.
+3. **Train a scoring model of your own** on that record. It predicts from the request
+   alone whether the expensive model is worth it, and a threshold you set decides how
+   often it says yes. That dial moves without retraining. What does need retraining is
+   the model lineup, because it learns one pair: cheap against expensive.
 4. **Rank your models instead.** Score every model for each request, adjust the
    balance of cost and quality afterwards, and add or remove models without starting
    over.
-5. **Keep the option to hold things back.** A better model never replaces that.
+5. **Answer the repeats without asking anyone.** See the section below.
+6. **Keep the option to hold things back.** A better model never replaces that.
 
 The number to judge all of this by is not the lowest cost per request. It is the
 **lowest cost per answer that is actually right**.
+
+### Comparing meaning instead of words
+
+The discussion slide says a request can become "a list of numbers", and someone will
+ask what that is called. It is an **embedding**. A small model turns text into a few
+hundred numbers, arranged so that text with a similar meaning gets similar numbers.
+"Move everyone to phishing-resistant sign-in" lands near "passkeys" without sharing a
+single word with it.
+
+That is what the trained options on the four ways slide run on, and what the vLLM
+Semantic Router in the tools table does. It is also the honest answer to the limit the
+passkeys example exposes: a word list only catches the words you thought of.
+
+### Answering the repeats without asking anyone
+
+Item 5 above. Embed each request, keep the answers you have already paid for, and when
+a new request lands close enough to an old one, return the saved answer. No model runs
+at all. This is often the largest single saving available, and it is independent of
+routing: it decides whether to send anything, not which model gets it.
+
+It is deliberately not on a timed slide. Three traps, and you have to say them out loud
+if someone asks:
+
+1. **Close in meaning is not the same question.** "Reset my password" and "reset my
+   password on iOS" embed almost identically and need different answers. The threshold
+   you pick is a quality decision, not a tuning knob.
+2. **Answers go stale.** The saved answer was right about last quarter's prices. Give
+   every entry an expiry, and clear it when the thing it describes changes.
+3. **One person's answer must never reach another person.** A shared cache is a privacy
+   leak waiting to happen, and it sits badly next to `HOLD`. Key the cache per user, or
+   only save requests that carry nothing personal.
+
+There is a quieter fourth. A wrong answer that passes its check gets saved and then
+served again and again, and the feedback loop never gets another chance to catch it.
+Whatever expiry you choose, make a bad rating delete the entry.
+
+None of this is in the workshop code. It is a direction on a take home slide, not
+something you can demonstrate.
 
 ### The same idea works elsewhere
 

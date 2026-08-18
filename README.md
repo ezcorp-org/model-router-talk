@@ -50,7 +50,6 @@ wrote themselves, and an understanding of:
 - what model routing is, and the three different things people mean by the word
 - why you cannot just ask every model and pick the best answer
 - the four ways to build a router, from written rules up to trained ranking
-- how routing maps onto infrastructure they already understand, like a load balancer
 - what checking an answer actually means, and why most checks are free
 - how bad answers feed back in and improve the rules over time
 
@@ -75,7 +74,7 @@ across different knowledge sources.
 | `Shift+Home` | first slide, and forget the saved position |
 | `#12` in the address | jump to slide 12 |
 
-28 slides. The first 22 are the timed session, ending on the slide that generalises
+25 slides. The first 19 are the timed session, ending on the slide that generalises
 the idea. The rest are reference for people to
 read afterwards, and the agenda slide says so out loud.
 
@@ -110,7 +109,7 @@ src/router/       the core. no dependencies, no network access
   rules.ts        compiles rules a visitor typed, and refuses the dangerous ones
 src/cli.ts        command line version, for the workshop exercise
 worker/proxy.ts   the small Worker that makes browser requests possible
-test/             126 tests
+test/             128 tests
 ```
 
 The core is plain TypeScript with no dependencies and no knowledge of any UI
@@ -294,7 +293,7 @@ teaches one idea rather than four.
 
 ```bash
 cd router
-bun test          # 126 tests
+bun test          # 128 tests
 tsc --noEmit      # type check
 ```
 
@@ -379,8 +378,8 @@ every time you run it.
 
 Working and verified:
 
-- 28 slides, no layout overflow at 1600x900 or 1280x800
-- 126 tests passing, `tsc --noEmit` and `svelte-check` clean under strict mode
+- 25 slides, no layout overflow at 1600x900 or 1280x800
+- 128 tests passing, `tsc --noEmit` and `svelte-check` clean under strict mode
 - all model IDs and pricing checked against Cloudflare's documentation
 - the website runs, routes and escalates, checked in a browser at desktop and phone
   widths against the built `docs/` rather than the dev server

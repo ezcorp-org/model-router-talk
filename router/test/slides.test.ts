@@ -1,5 +1,6 @@
 import { test, expect, describe } from "bun:test";
 import {
+  checkAnswer,
   CLASSIFIER_SCHEMA,
   DEFAULT_CONFIG,
   decideLane,
@@ -91,6 +92,21 @@ describe("the escalation slide", () => {
     const card = await route(prompt, client());
     expect(formatCost(card.cost)).toBe("$0.06");
     expect(card.attempts.length).toBe(2);
+  });
+});
+
+describe("the checking slide", () => {
+  // The last column on that slide labels every row as either code or a model,
+  // and the note under it says every check in this router is the code kind, so
+  // checking costs nothing. That claim holds only while checkAnswer takes two
+  // strings and answers on the spot. Give it a client, or make it wait, and the
+  // slide is wrong about the price of checking.
+  test("the check takes only the prompt and the answer, so it has nothing to call", () => {
+    expect(checkAnswer.length).toBe(2);
+  });
+
+  test("it answers without waiting, which no model call can do", () => {
+    expect(checkAnswer("give me json", '{"a": 1}')).not.toBeInstanceOf(Promise);
   });
 });
 

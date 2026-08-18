@@ -102,6 +102,10 @@
   tbody tr:last-child td{border-bottom:none}
   td.num,th.num{text-align:right;padding-right:0;font-variant-numeric:tabular-nums}
   td.t{font-family:var(--mono);color:var(--subtle);font-size:.92em}
+  /* who does the checking: the pill says code or a model, the text beside it says
+     what that costs. A div keeps the cell a table cell, so columns stay aligned. */
+  td .by{display:flex;align-items:center;gap:.6rem;white-space:nowrap}
+  td .by .badge{padding:.28rem .6rem}
   /* dense comparison table — the landscape slide */
   table.dense{font-size:clamp(.7rem,.92vw,.86rem);margin-top:1rem}
   table.dense th{font-size:.62rem;padding:0 .85rem .6rem 0}
@@ -186,6 +190,10 @@
   .note{font-size:clamp(.78rem,.98vw,.9rem);color:#7A756E;margin-top:1.2rem;
         max-width:62ch;line-height:1.55}
   .note strong{color:var(--subtle);font-weight:600}
+  /* the questions a slide raises, answered on the slide. Same type as a note,
+     stacked, so the room reads them without being walked through them. */
+  .qa{display:flex;flex-direction:column;gap:.7rem}
+  .qa .note{margin-top:0;max-width:none}
   .note code{background:var(--s2);border-radius:4px;padding:.1em .38em;color:var(--subtle)}
 
   /* flow chart */
@@ -343,10 +351,9 @@
     <tbody>
       <tr><td class="t">2&ndash;4</td><td><strong>Set it up</strong></td><td>Nothing to install, so this is quick</td></tr>
       <tr><td class="t">4&ndash;10</td><td><strong>Watch it choose</strong></td><td>Three examples, running live</td></tr>
-      <tr><td class="t">10&ndash;17</td><td><strong>What routing means</strong></td><td>Why it has to guess before it spends</td></tr>
-      <tr><td class="t">17&ndash;20</td><td><strong>Where you have seen this before</strong></td><td>It matches tools you already use</td></tr>
-      <tr><td class="t">20&ndash;25</td><td><strong>Checks and second tries</strong></td><td>How it handles being wrong</td></tr>
-      <tr><td class="t">25&ndash;29</td><td><strong>Your turn</strong></td><td>One rule you wrote yourself</td></tr>
+      <tr><td class="t">10&ndash;16</td><td><strong>What routing means</strong></td><td>Why it has to guess before it spends</td></tr>
+      <tr><td class="t">16&ndash;21</td><td><strong>Checks and second tries</strong></td><td>How it handles being wrong</td></tr>
+      <tr><td class="t">21&ndash;29</td><td><strong>Your turn</strong></td><td>One rule you wrote yourself</td></tr>
       <tr><td class="t">29&ndash;30</td><td><strong>The bigger idea</strong></td><td>Where else this same shape fits</td></tr>
     </tbody>
   </table>
@@ -452,12 +459,17 @@ bun src/cli.ts --mock --demo</pre>
 </section>
 
 <!-- 9 -->
-<section class="slide" data-seg="What routing is · 10–17">
+<section class="slide" data-seg="What routing is · 10–16">
   <div class="eyebrow">What routing is</div>
   <h2>What model routing means</h2>
   <p class="lead">Choosing which model should handle each request, and deciding
      <strong>before</strong> you send it.</p>
-  <div class="flow" style="margin-top:1.8rem">A request comes in
+  <p style="margin-top:.9rem">Two other things get called routing as well. A
+     <strong>gateway</strong> is one doorway into many AI companies, so you only manage
+     one connection, but you still pick the model yourself. A <strong>fallback</strong>
+     moves to another company when one goes down. Neither of them reads the request.
+     Only this third kind changes how much quality you get for your money.</p>
+  <div class="flow" style="margin-top:1.4rem">A request comes in
    │
    ▼
 <b>The router</b>
@@ -472,31 +484,7 @@ bun src/cli.ts --mock --demo</pre>
 </section>
 
 <!-- 10 -->
-<section class="slide" data-seg="What routing is · 10–17">
-  <h2>People use the word "routing" three ways</h2>
-  <div class="cols3">
-    <div class="card">
-      <h3>Gateway</h3>
-      <p>One doorway into many AI companies, so you only manage one connection.
-         You still choose the model yourself. Examples: OpenRouter, LiteLLM.</p>
-    </div>
-    <div class="card">
-      <h3>Fallback</h3>
-      <p>If one company's service goes down, try another one. This is about staying
-         online, not about picking the best model.</p>
-    </div>
-    <div class="card pick">
-      <h3>Dynamic &larr; today</h3>
-      <p>Look at each request and send it to the model that suits it. This is the
-         version that changes what you spend.</p>
-    </div>
-  </div>
-  <p class="note">All three are useful, and you can use them together. Only the third
-     one changes how much quality you get for your money.</p>
-</section>
-
-<!-- 11 -->
-<section class="slide" data-seg="What routing is · 10–17">
+<section class="slide" data-seg="What routing is · 10–16">
   <h2>Why not just ask every model?</h2>
   <p class="lead" style="margin-top:.4rem">Send it to all three, compare the answers,
      keep the best one. It sounds like the version that wins on quality.</p>
@@ -526,8 +514,8 @@ bun src/cli.ts --mock --demo</pre>
      is the whole problem.</p>
 </section>
 
-<!-- 12 -->
-<section class="slide" data-seg="What routing is · 10–17">
+<!-- 11 -->
+<section class="slide" data-seg="What routing is · 10–16">
   <h2>What this saves over 1,000 requests</h2>
   <div class="chart">
     <div class="legend">
@@ -574,12 +562,12 @@ bun src/cli.ts --mock --demo</pre>
        $200.</strong></p>
   </div>
   <p class="note">These prices are made up. What is real is the gap between them, which
-     stays roughly similar across AI companies. The bottom bar is the idea from two
-     slides ago, drawn to scale: asking everyone costs more than always paying the most.</p>
+     stays roughly similar across AI companies. The bottom bar is the idea from the
+     slide before, drawn to scale: asking everyone costs more than always paying the most.</p>
 </section>
 
-<!-- 13 -->
-<section class="slide" data-seg="What routing is · 10–17">
+<!-- 12 -->
+<section class="slide" data-seg="What routing is · 10–16">
   <div class="big">85%</div>
   <p class="sub">less than sending all 1,000 requests to the biggest model. But this is
      still the wrong number to focus on.</p>
@@ -592,8 +580,8 @@ bun src/cli.ts --mock --demo</pre>
      not saved anything. You have just moved the cost somewhere you are not counting.</p>
 </section>
 
-<!-- 14 -->
-<section class="slide" data-seg="What routing is · 10–17">
+<!-- 13 -->
+<section class="slide" data-seg="What routing is · 10–16">
   <h2>Four ways to build a router</h2>
   <table>
     <thead><tr><th style="width:15rem">Approach</th><th>How it decides</th><th>The catch</th></tr></thead>
@@ -605,8 +593,8 @@ bun src/cli.ts --mock --demo</pre>
           <td>You write rules that look for certain words and pick a model based on what they find.</td>
           <td>The rules pile up and start to conflict. They also cannot improve on their own.</td></tr>
       <tr><td><strong>By trained scoring</strong></td>
-          <td>You collect examples of which model did better, then train a small program to score new requests.</td>
-          <td>Based on real data, but it only handles two models well, and you retrain to change anything.</td></tr>
+          <td>You collect examples of which model gave the better answer, then train a scoring model of your own to predict, from the request alone, whether the expensive one is worth it.</td>
+          <td>Based on real data, but it learns one pair: cheap against expensive. Add a third model, or swap either one, and you train it again.</td></tr>
       <tr><td><strong>By ranking</strong></td>
           <td>Rank all your models for each request, the way a streaming service ranks what to show you next.</td>
           <td>You need a solid testing setup first. In return it handles many models and keeps improving.</td></tr>
@@ -617,64 +605,8 @@ bun src/cli.ts --mock --demo</pre>
      over time.</p>
 </section>
 
-<!-- 15 -->
-<section class="slide" data-seg="Familiar ground · 17–20">
-  <div class="eyebrow">A familiar idea</div>
-  <h2>You have seen this before</h2>
-  <div class="cols">
-    <div>
-      <h3>How websites handle traffic</h3>
-      <div class="flow">A visitor arrives
-   │
-   ▼
-<b>Traffic director</b>
-   │
-   ├──▶ Server A
-   ├──▶ Server B
-   └──▶ Server C</div>
-      <p class="note" style="margin-top:1.1rem">It decides using things like which
-         server is healthy, which is busy, and where the visitor is located.</p>
-    </div>
-    <div>
-      <h3>How model routing works</h3>
-      <div class="flow">A request arrives
-   │
-   ▼
-<b>Model router</b>
-   │
-   ├──▶ Fast model
-   ├──▶ Quality model
-   ├──▶ Premium model
-   └──▶ HOLD (send nothing)</div>
-      <p class="note" style="margin-top:1.1rem">It decides using things like how hard
-         the request is, how risky it is, how much it costs, and how private it is.</p>
-    </div>
-  </div>
-</section>
-
-<!-- 16 -->
-<section class="slide" data-seg="Familiar ground · 17–20">
-  <h2>The pieces line up almost exactly</h2>
-  <table>
-    <thead><tr><th>Website traffic</th><th>Model routing</th></tr></thead>
-    <tbody>
-      <tr><td>Traffic director</td><td><strong>The router</strong></td></tr>
-      <tr><td>A server</td><td><strong>A model</strong></td></tr>
-      <tr><td>Checking a server is healthy</td><td><strong>Checking the answer is good</strong></td></tr>
-      <tr><td>Trying the request again</td><td><strong>Trying a stronger model</strong></td></tr>
-      <tr><td>A backup server</td><td><strong>A backup model</strong></td></tr>
-      <tr><td>Taking a broken server offline</td><td><strong>Pausing a model that keeps failing</strong></td></tr>
-      <tr><td>A limit on how slow a page can be</td><td><strong>A limit on how long users wait</strong></td></tr>
-      <tr><td>A budget for how many errors are okay</td><td><strong>A budget for how many bad answers are okay</strong></td></tr>
-    </tbody>
-  </table>
-  <div class="quote" style="margin-top:1.5rem">
-    <p>Same idea you already know. It just uses different information to decide.</p>
-  </div>
-</section>
-
-<!-- 17 -->
-<section class="slide" data-seg="How it works · 20–25">
+<!-- 14 -->
+<section class="slide" data-seg="How it works · 16–21">
   <div class="eyebrow plain">Models and harnesses</div>
   <h2>The model is the head.<br>The harness is the arms.</h2>
 
@@ -734,8 +666,8 @@ bun src/cli.ts --mock --demo</pre>
      each other. <strong>The three yellow arms are the parts we build today.</strong></p>
 </section>
 
-<!-- 18 -->
-<section class="slide" data-seg="How it works · 20–25">
+<!-- 15 -->
+<section class="slide" data-seg="How it works · 16–21">
   <h2>The order the program checks things</h2>
   <div class="flow">A request arrives
    │
@@ -765,8 +697,8 @@ bun src/cli.ts --mock --demo</pre>
      private to send stays a rule a person wrote down.</p>
 </section>
 
-<!-- 19 -->
-<section class="slide" data-seg="How it works · 20–25">
+<!-- 16 -->
+<section class="slide" data-seg="How it works · 16–21">
   <h2>What does checking an answer mean?</h2>
   <p style="max-width:64ch">The whole idea rests on catching a bad answer before a
      person sees it. That sounds hard. Mostly it is not.</p>
@@ -774,25 +706,50 @@ bun src/cli.ts --mock --demo</pre>
     <thead><tr>
       <th>What you asked for</th>
       <th>How you check it</th>
-      <th style="width:9rem">What it costs</th>
+      <th style="width:13rem">What checks it</th>
     </tr></thead>
     <tbody>
-      <tr><td>Some JSON</td><td>Try to read it as JSON. If that fails, it is broken.</td><td class="t">free</td></tr>
-      <tr><td>Working code</td><td>Run your tests against it.</td><td class="t">free</td></tr>
-      <tr><td>Exactly five ideas</td><td>Count them.</td><td class="t">free</td></tr>
-      <tr><td>A short summary</td><td>Check it is actually shorter than what you gave it.</td><td class="t">free</td></tr>
-      <tr><td>Anything at all</td><td>Is it empty, cut off halfway, or a refusal?</td><td class="t">free</td></tr>
-      <tr><td>Something subtle</td><td>Ask a stronger model whether the answer is any good.</td><td class="t">one more call</td></tr>
+      <tr><td>Some JSON</td><td>Pull the JSON out of the chatter around it, then parse it.</td>
+          <td><div class="by"><span class="badge">code</span><span class="t">free</span></div></td></tr>
+      <tr><td>Working code</td><td>Run the tests you already had, not the ones it wrote.</td>
+          <td><div class="by"><span class="badge">code</span><span class="t">free</span></div></td></tr>
+      <tr><td>Exactly five ideas</td><td>Ask for a list. Count it, then look for repeats.</td>
+          <td><div class="by"><span class="badge">code</span><span class="t">free</span></div></td></tr>
+      <tr><td>A short summary</td><td>Shorter than what you gave it, but not so short it says nothing.</td>
+          <td><div class="by"><span class="badge">code</span><span class="t">free</span></div></td></tr>
+      <tr><td>Anything at all</td><td>Empty, does not end on a full stop, or a refusal.</td>
+          <td><div class="by"><span class="badge">code</span><span class="t">free</span></div></td></tr>
+      <tr><td>Something subtle</td><td>Ask a stronger model to grade the answer, not to redo it.</td>
+          <td><div class="by"><span class="badge y">a model</span><span class="t">one more call</span></div></td></tr>
     </tbody>
   </table>
-  <div class="quote hot" style="margin-top:1.3rem">
-    <p>If you cannot describe how you would check the answer, that is worth noticing.
-       It usually means a person still needs to look at it.</p>
+  <p class="note" style="margin-top:.9rem">Every check in the router we build today is
+     the code kind, which is why checking costs nothing. A model only grades a model
+     when no code can.</p>
+  <div class="cols" style="margin-top:1.2rem">
+    <div class="quote hot" style="margin-top:0">
+      <p>If you cannot describe how you would check the answer, that is worth noticing.
+         It usually means a person still needs to look at it.</p>
+    </div>
+    <div>
+      <h3>Before you ask</h3>
+      <div class="qa">
+        <p class="note"><strong>Then why not answer with the stronger model?</strong>
+           Grading is a smaller job than answering, and it only runs on the answers
+           that fail.</p>
+        <p class="note"><strong>How do you know the check itself is right?</strong>
+           Write a bad answer yourself and watch it get caught. Today's demo does
+           exactly that.</p>
+        <p class="note"><strong>Does the check have to be perfect?</strong> No. It has
+           to be cheap and better than nothing. Catching the common failure already
+           pays.</p>
+      </div>
+    </div>
   </div>
 </section>
 
-<!-- 20 -->
-<section class="slide" data-seg="Your turn · 25–29">
+<!-- 17 -->
+<section class="slide" data-seg="Your turn · 21–29">
   <div class="eyebrow">Your turn</div>
   <h2>Add one rule of your own</h2>
   <p>On <span class="s">talks.ezcorp.org</span>, open <strong>Advanced</strong> in the
@@ -815,8 +772,8 @@ bun src/cli.ts --mock --demo</pre>
      <code>bun src/cli.ts --mock "your request here"</code>.</p>
 </section>
 
-<!-- 21 -->
-<section class="slide" data-seg="Your turn · 25–29">
+<!-- 18 -->
+<section class="slide" data-seg="Your turn · 21–29">
   <h2>One last example to discuss</h2>
   <pre style="margin-bottom:1.8rem">I need a plan to switch our login system over to passkeys
 without locking out the people who already have accounts.</pre>
@@ -844,12 +801,15 @@ without locking out the people who already have accounts.</pre>
            "locking out", "switch over" and "people who already have accounts" were never
            read. Ask the room the same request as <strong>"move everyone to
            phishing-resistant sign-in"</strong>. No rule matches, so it falls to the
-           chooser &mdash; and that is the honest limit of a word list.</p>
+           chooser &mdash; and that is the honest limit of a word list. The way past it is
+           to compare meaning instead of words: turn every request into a list of numbers,
+           and anything that means what "passkeys" means lands near it, whichever words it
+           used.</p>
       </div>
     </div>
   </div>
 </section>
-<!-- 22 -->
+<!-- 19 -->
 <section class="slide" data-seg="The bigger idea · 29–30">
   <div class="eyebrow plain">The bigger idea</div>
   <h2>What you actually learned today</h2>
@@ -911,7 +871,7 @@ learn       <span class="c"># bad results improve the rules</span></pre>
 </section>
 
 
-<!-- 23 -->
+<!-- 20 -->
 <section class="slide" data-seg="Take home">
   <div class="eyebrow plain">Putting it together</div>
   <h2>Bad answers help you improve</h2>
@@ -973,7 +933,7 @@ learn       <span class="c"># bad results improve the rules</span></pre>
   </div>
 </section>
 
-<!-- 24 -->
+<!-- 21 -->
 <section class="slide" data-seg="Take home">
   <h2>Two things to be honest about</h2>
   <div class="cols">
@@ -992,7 +952,7 @@ learn       <span class="c"># bad results improve the rules</span></pre>
       <p>In the program we built today, step 07 is <strong>you editing a rule by
          hand</strong>. That is quick and easy to review, but it does not hold up as
          the system grows.</p>
-      <p style="margin-top:.9rem">Once you move up to a trained program, step 07 becomes
+      <p style="margin-top:.9rem">Once you move up to a scoring model of your own, step 07 becomes
          automatic, and that is when the whole loop can run without a person in it.</p>
       <p class="note">That is the real reason to move past word matching. The rules are
          not wrong. They just cannot learn from step 04 on their own.</p>
@@ -1000,7 +960,7 @@ learn       <span class="c"># bad results improve the rules</span></pre>
   </div>
 </section>
 
-<!-- 25 -->
+<!-- 22 -->
 <section class="slide" data-seg="Take home">
   <h2>What to do next</h2>
   <ul>
@@ -1010,15 +970,21 @@ learn       <span class="c"># bad results improve the rules</span></pre>
     <li><strong>Test a small share of traffic.</strong> Send about 1 in 100 requests to
         every model and compare the answers. This is how you find out your rules are
         wrong.</li>
-    <li><strong>Move past word matching.</strong> Once you have that record, a trained
-        program will beat your word list, and you will not have to rewrite it every
-        time a new model comes out.</li>
+    <li><strong>Move past word matching.</strong> Once you have that record, a scoring
+        model of your own will beat your word list, because it compares meaning rather
+        than words, and you will not have to rewrite it every time a new model comes
+        out.</li>
+    <li><strong>Answer the repeats without asking anyone.</strong> Plenty of requests
+        are near copies of one you already answered. Keep the old answers and reuse
+        them, and the cheapest request is the one you never send. Watch three things:
+        two requests can look almost identical and still need different answers, saved
+        answers go stale, and one person's answer must never reach another person.</li>
     <li><strong>Keep the option to hold things back.</strong> That is the one part a
         better model never replaces.</li>
   </ul>
 </section>
 
-<!-- 26 -->
+<!-- 23 -->
 <section class="slide" data-seg="Take home">
   <div class="eyebrow plain">Worth saving a photo of</div>
   <h2>Tools you can use for this</h2>
@@ -1077,7 +1043,7 @@ learn       <span class="c"># bad results improve the rules</span></pre>
 </section>
 
 
-<!-- 27 -->
+<!-- 24 -->
 <section class="slide" data-seg="Close">
   <h2>Send work to the right place.<br>Check the result.<br>Try again when it fails.</h2>
   <p style="margin-top:1.4rem">Small models make everyday work feel fast. Big models
@@ -1091,7 +1057,7 @@ learn       <span class="c"># bad results improve the rules</span></pre>
   </div>
 </section>
 
-<!-- 28 -->
+<!-- 25 -->
 <section class="slide" data-seg="Close">
   <div class="eyebrow plain">Reference</div>
   <h2>Sources</h2>
