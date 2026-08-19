@@ -11,15 +11,13 @@
     <meta name="color-scheme" content="dark" />
 
     <!--
-      Three bars in the lane colours, longest for FAST, shortest for PREMIUM:
-      the shape of a routed workload. Inline as a data URI so it costs no
-      request. Without any icon at all a browser asks for /favicon.ico and
-      logs a 404 on every single page load.
+      The EZCorp mark, byte for byte the file ezcorp.org serves, so a tab open
+      on talks.ezcorp.org looks like a tab open on the main site. Declaring it
+      also stops the browser asking for /favicon.ico and logging a 404 on
+      every page load.
     -->
-    <link
-      rel="icon"
-      href="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 32 32'><rect width='32' height='32' rx='7' fill='%230C0B0A'/><rect x='7' y='8' width='18' height='4' rx='2' fill='%233B9EF5'/><rect x='7' y='14' width='13' height='4' rx='2' fill='%232DBD72'/><rect x='7' y='20' width='8' height='4' rx='2' fill='%23EEC216'/></svg>"
-    />
+    <link rel="icon" type="image/svg+xml" href="/ez-logo.svg" />
+    <link rel="apple-touch-icon" href="/ez-logo.svg" />
 
     <link rel="preconnect" href="https://fonts.googleapis.com" />
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />

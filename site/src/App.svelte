@@ -22,7 +22,12 @@
 <a class="skip" href="#main" onclick={skipToContent}>Skip to content</a>
 
 <header>
-  <a class="logo" href={href("home")}>EZCORP <b>/</b> ROUTER</a>
+  <!--
+    The address, not a brand. During the exercise the playground is often
+    fullscreen, so the address bar is hidden and the deck slide carrying the
+    URL is off screen. This line is then the only place it appears.
+  -->
+  <a class="logo" href={href("home")}>TALKS.EZCORP.ORG</a>
   <nav>
     <a href={href("home")} class:on={router.current === "home"}>Overview</a>
     <a href={href("playground")} class:on={router.current === "playground"}>Playground</a>
@@ -84,8 +89,8 @@
     color: var(--dimmer);
     text-decoration: none;
   }
-  .logo b {
-    color: var(--yellow);
+  .logo:hover {
+    color: var(--subtle);
   }
 
   nav {
