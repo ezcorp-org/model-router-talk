@@ -4,8 +4,9 @@ A small model router in TypeScript. The core is plain logic with no
 dependencies, so the same code runs in a browser, in a Cloudflare Worker, in
 Node and in Bun.
 
-This is the code behind the "Right Model, Right Task" workshop, packaged so the
-examples can run on a webpage with nothing to install.
+This is the code behind the "Save millions on inference by building a model
+router" workshop, packaged so the examples can run on a webpage with nothing
+to install.
 
 ## What is in here
 

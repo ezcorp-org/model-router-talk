@@ -3,7 +3,7 @@
 <head>
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width,initial-scale=1">
-<title>Right Model. Right Task. | EZCorp</title>
+<title>Save millions on inference by building a model router | EZCorp</title>
 <!--
   The EZCorp mark, the same artwork ezcorp.org serves, inlined so the deck
   stays one self-contained file and asks the network for nothing. The path
@@ -47,7 +47,9 @@
            margin-bottom:1.4rem}
   .eyebrow.plain{color:var(--subtle)}
 
-  h1{font-size:clamp(2.4rem,5.4vw,4.6rem);line-height:1;letter-spacing:-.03em;
+  /* Sized for the title, which is two long lines. Any bigger and the second
+     line runs past the 7vw slide padding on a 4:3 projector. */
+  h1{font-size:clamp(2rem,5vw,4.4rem);line-height:1.05;letter-spacing:-.03em;
      font-weight:700;color:var(--white)}
   h2{font-size:clamp(1.7rem,3.2vw,2.7rem);line-height:1.1;letter-spacing:-.03em;
      font-weight:700;color:var(--white);margin-bottom:1.6rem}
@@ -301,6 +303,9 @@
     .cols,.cols3{grid-template-columns:1fr;gap:1.2rem}
     .slide{padding:4vh 6vw}
     .rc span.l{flex:0 0 6.5rem}
+    /* Drop the hand-placed break in the title: on a phone the line it makes is
+       wider than the screen, so let the text wrap where it fits. */
+    h1 br{display:none}
   }
   @media print{
     body{overflow:visible;background:#fff}
@@ -316,7 +321,7 @@
 <!-- 1 -->
 <section class="slide" data-seg="Open · 0–2">
   <div class="eyebrow">30 minutes · hands on · bring a laptop</div>
-  <h1>Right Model.<br>Right Task.</h1>
+  <h1>Save millions on inference<br>by building a model router</h1>
   <p class="lead" style="margin-top:1.6rem">Build a program that picks the right AI
      model for each job. It fits in one file. Nothing to install.</p>
 </section>

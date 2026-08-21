@@ -1,4 +1,4 @@
-# Right Model, Right Task: Build an AI Model Router
+# Save millions on inference by building a model router
 
 A 30 minute talk plus a hands on workshop. It runs on **Cloudflare Workers AI**, so
 there is nothing to install and you do not need a graphics card.

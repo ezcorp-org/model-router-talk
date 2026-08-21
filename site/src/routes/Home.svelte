@@ -49,7 +49,8 @@
 </script>
 
 <section class="hero">
-  <p class="eyebrow">Right model. Right task.</p>
+  <!-- Broken where the deck's title slide breaks, so the two read as one talk. -->
+  <p class="eyebrow">Save millions on inference<br />by building a model router</p>
   <h1>Not every job<br />needs an expert.</h1>
   <p class="lead">
     Small models are quick and cheap. Large ones cost more and take longer, but handle hard
@@ -192,6 +193,7 @@
   }
   .hero .eyebrow {
     grid-area: eyebrow;
+    line-height: 1.6;
   }
   .hero h1 {
     grid-area: title;
