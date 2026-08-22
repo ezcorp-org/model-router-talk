@@ -323,7 +323,7 @@
   <div class="eyebrow">30 minutes · hands on · bring a laptop</div>
   <h1>Save millions on inference<br>by building a model router</h1>
   <p class="lead" style="margin-top:1.6rem">Build a program that picks the right AI
-     model for each job. It fits in one file. Nothing to install.</p>
+     model for each job.</p>
 </section>
 
 <!-- 2 -->
@@ -358,11 +358,11 @@
   <table>
     <thead><tr><th style="width:6rem">Min</th><th>What we do</th><th>What you get</th></tr></thead>
     <tbody>
-      <tr><td class="t">2&ndash;4</td><td><strong>Set it up</strong></td><td>Nothing to install, so this is quick</td></tr>
+      <tr><td class="t">2&ndash;4</td><td><strong>Set it up</strong></td><td>One page open, ready to type</td></tr>
       <tr><td class="t">4&ndash;10</td><td><strong>Watch it choose</strong></td><td>Three examples, running live</td></tr>
       <tr><td class="t">10&ndash;16</td><td><strong>What routing means</strong></td><td>Why it has to guess before it spends</td></tr>
       <tr><td class="t">16&ndash;21</td><td><strong>Checks and second tries</strong></td><td>How it handles being wrong</td></tr>
-      <tr><td class="t">21&ndash;29</td><td><strong>Your turn</strong></td><td>One rule you wrote yourself</td></tr>
+      <tr><td class="t">21&ndash;29</td><td><strong>Your turn</strong></td><td>One decision you changed yourself</td></tr>
       <tr><td class="t">29&ndash;30</td><td><strong>The bigger idea</strong></td><td>Where else this same shape fits</td></tr>
     </tbody>
   </table>
@@ -376,15 +376,16 @@
   <div class="eyebrow">Setup</div>
   <h2>Get it running</h2>
   <div class="stack">
-<pre><span class="c"># Nothing to install. Open the page and start typing.</span>
+<pre><span class="c"># Open the page and start typing.</span>
 <span class="s">talks.ezcorp.org</span>
 
 <span class="c"># Or run the same code on your own machine, no key needed</span>
 bun src/cli.ts --mock --demo</pre>
   </div>
-  <p class="note">The page works straight away with demo answers, so nobody has to
-     install anything, and everything runs in your own browser. The playground there
-     lets you change any rule and watch the routing change as you type. To run it
+  <p class="note">The page works straight away with demo answers, and everything runs
+     in your own browser. It carries the chooser, the length check and the answer
+     checks, and lets you change what they do. The word lists are the one part it does
+     not carry, so they run in the code you clone. To run it
      yourself you need Bun, or Node version 22 and up with
      <code>node --experimental-strip-types</code>. <code>--demo</code> runs the sample
      requests; <code>--mock</code> is what lets it work with no key and no internet.
@@ -417,7 +418,8 @@ bun src/cli.ts --mock --demo</pre>
     </tbody>
   </table>
   <p class="note">Try these on the demo page, or run
-     <code>bun src/cli.ts --mock --demo</code></p>
+     <code>bun src/cli.ts --mock --demo</code>. The page carries no word lists, so there
+     the chooser makes all three calls. In the code, a rule catches each one first.</p>
 </section>
 
 <!-- 6 -->
@@ -427,17 +429,19 @@ bun src/cli.ts --mock --demo</pre>
     <div><span class="l">Request</span><span class="v">Pull the to-do items out of these meeting notes...</span></div>
     <div><span class="l">Chose</span><span class="v hi-fast">FAST</span></div>
     <div><span class="l">Model</span><span class="v">llama-3.2-3b-instruct</span></div>
-    <div><span class="l">Because</span><span class="v">a job type rule matched <code>\bpull\b[^.?!]*\bout of\b</code></span></div>
+    <div><span class="l">Because</span><span class="v">a job type rule spotted <code>pull &hellip; out of</code></span></div>
     <div><span class="l">Reason</span><span class="v">Simple job with a predictable answer, and easy to check</span></div>
     <div><span class="l">Check</span><span class="v ok">PASSED</span></div>
     <div><span class="l">Time</span><span class="v">1.4 seconds</span></div>
     <div><span class="l">Cost</span><span class="v">$0.01</span></div>
   </div>
   <p class="note"><strong>That yellow line is the entire rule.</strong> Not a model, not
-     a guess: a search for the word "pull", then "out of" later in the same sentence. A
-     router starts as a list of lines like that one, checked in order, and it costs
-     nothing to run. Every choice prints a card like this, because if you cannot see why
-     it chose something, you cannot fix it when it chooses wrong.</p>
+     a guess: a search for the word "pull", then "out of" later in the same sentence.
+     Underneath, the rule is a regular expression. What matters here is which words
+     caught the request, not the syntax that caught them. A router starts as a list of
+     lines like that one, checked in order, and it costs nothing to run. Every choice
+     prints a card like this, because if you cannot see why it chose something, you
+     cannot fix it when it chooses wrong.</p>
 </section>
 
 <!-- 7 -->
@@ -760,25 +764,28 @@ bun src/cli.ts --mock --demo</pre>
 <!-- 17 -->
 <section class="slide" data-seg="Your turn · 21–29">
   <div class="eyebrow">Your turn</div>
-  <h2>Add one rule of your own</h2>
-  <p>On <span class="s">talks.ezcorp.org</span>, open <strong>Advanced</strong> in the
-     playground and find <code>POLICY_RULES</code> or <code>TASK_RULES</code>. Add one
-     pattern to a list. None of these is in there yet, so you will see the routing
-     change:</p>
+  <h2>Change one decision</h2>
+  <p>On <span class="s">talks.ezcorp.org</span>, open <strong>Advanced</strong>. Every
+     one of these works on demo answers, with no key and no account:</p>
   <ul style="margin-top:1.3rem">
-    <li><code>invoice</code>, <code>refund</code> or <code>chargeback</code> goes to PREMIUM</li>
-    <li><code>privacy</code> or <code>home address</code> is held back and never sent</li>
-    <li><code>ELI5</code> goes to FAST</li>
-    <li><code>benchmark</code> or <code>latency</code> goes to QUALITY</li>
-    <li>Or change no rule at all: drop <code>LONG_REQUEST_CHARS</code> from 1,000 to 300
-        and see what moves</li>
+    <li><strong>Drop the length limit</strong> from 1,000 characters to 300, then send
+        something just over it. It goes to QUALITY before the chooser is even asked</li>
+    <li><strong>Watch a check fail.</strong> Send the JSON example and follow the card:
+        FAST answers, the check rejects it, the router pays again a lane up</li>
+    <li><strong>Swap the model a lane uses</strong>, or change what it costs, and watch
+        the card and the price follow the setting</li>
+    <li><strong>Read the chooser's prompt</strong>, and the shape its answer is held to.
+        HOLD is not one of the choices it is offered. Editing that wording needs a key,
+        because the demo chooser is a stand-in</li>
   </ul>
-  <p class="note">Read the lists before you add to them. <code>production</code>,
-     <code>medical</code> and asking for JSON are already covered, and finding that out
-     is half the exercise. Type a request and watch which model it picks before you
-     press send, so it costs nothing. Running the code yourself? Same lists live in
-     <code>src/router/config.ts</code>; test with
-     <code>bun src/cli.ts --mock "your request here"</code>.</p>
+  <p class="note">The word lists are the one part this page does not carry, so every
+     request here reaches the chooser. Adding a rule needs the code: open
+     <code>src/router/config.ts</code> and put one word into <code>POLICY_RULES</code>
+     or <code>TASK_RULES</code> &mdash; <code>invoice</code>, <code>ELI5</code>,
+     <code>benchmark</code>. Then test it for nothing with
+     <code>bun src/cli.ts --mock "your request here"</code>. Read the lists first:
+     <code>production</code>, <code>medical</code> and asking for JSON are already
+     covered, and finding that out is half the exercise.</p>
 </section>
 
 <!-- 18 -->

@@ -322,7 +322,7 @@ export const TASK_RULES: Rule[] = [
 Two things to know.
 
 **Order matters.** Safety rules run before job type rules, and both run before the
-the chooser. A request mentioning `migration` hits a safety rule and goes to `PREMIUM`
+chooser. A request mentioning `migration` hits a safety rule and goes to `PREMIUM`
 even if you wrote a rule that should have caught it first. This surprises everybody at
 least once, and it is the main reason teams eventually move past hand written rules.
 The workshop exercise is built around letting people discover exactly this.

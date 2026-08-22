@@ -13,6 +13,7 @@ declare module "bun:test" {
     toBe(expected: unknown): void;
     toEqual(expected: unknown): void;
     toBeNull(): void;
+    toBeUndefined(): void;
     toBeGreaterThan(n: number): void;
     toContain(item: unknown): void;
     toThrow(expected?: unknown): void;

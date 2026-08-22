@@ -48,14 +48,19 @@ start typing. It works straight away using demo answers, so nobody has to instal
 anything, make an account, or wait on a download. Everything runs in their own
 browser, so nothing they type reaches a server of ours.
 
-The demo answers are not real model output, but everything else is real: the rules,
-the checks, and moving up to a stronger model when a check fails. That is the part
-the workshop is about.
+The demo answers are not real model output. The length check, the answer checks, and
+moving up to a stronger model when one fails are all real, and that is the part the
+workshop is about.
 
-The playground on that page has an **Advanced** section holding every rule, every
-model, and the prompt the chooser is given. That is where the exercise happens for
-anyone who would rather not clone the repository. Changes stay in their browser, and
-there is a reset button, so nobody can break it for anyone else.
+**Know what the page leaves out, because a slide used to get this wrong.** It carries
+no word lists, so every request there reaches the chooser, and on demo answers the
+chooser is a stand-in rather than a model. Rules are the code's job, not the page's.
+Say that once, early, and nothing later in the session surprises anyone.
+
+The **Advanced** section holds the models, what each lane costs, the length limit, and
+the prompt the chooser is given. That is where the browser half of the exercise
+happens. Changes stay in their browser, and there is a reset button, so nobody can
+break it for anyone else.
 
 ### To run the same code yourself
 
@@ -221,26 +226,39 @@ a person wrote down.
 
 ## The exercise, 21 to 29 minutes
 
-Most of the room does this in the browser: on <https://talks.ezcorp.org>, open
-**Advanced** in the playground, which holds the same rule lists. The slide leads with
-that, because nobody has cloned anything. Anyone running the code locally edits
-`src/router/config.ts` instead. Either way: find `POLICY_RULES` or `TASK_RULES`
-near the top, and add **one** pattern:
+The exercise has two halves, because the browser and the code do not run the same
+things. The slide leads with the browser, since nobody has cloned anything.
 
-```ts
-export const TASK_RULES: Rule[] = [
-  // ... rules that are already there ...
-  {
-    lane: "QUALITY",
-    reason: "Mentions a specific framework, so it needs real knowledge",
-    patterns: [/\bDjango\b/i, /\bRails\b/i, /\bKubernetes\b/i],
-  },
-];
-```
+### In the browser, which is most of the room
 
-One thing to watch: never put the `/g` flag on a pattern. A global regular
-expression remembers where it stopped last time, so it would match every other
-request. There is a test that checks for this.
+On <https://talks.ezcorp.org>, open **Advanced**. Four things there work on demo
+answers with no key, and the slide lists them:
+
+1. **Drop the length limit** from 1,000 to 300 characters, then send something just
+   over it. It reaches QUALITY without the chooser being asked, which is the cheapest
+   routing decision in the whole program.
+2. **Send the JSON example**, the one the page labels *The check fails*, and read the
+   card as it moves: FAST answers, the check rejects it, the router pays again a lane
+   up.
+3. **Swap the model on a lane, or its cost.** The card and the price follow a setting,
+   not code.
+4. **Read the chooser's prompt and its schema.** `HOLD` is not among the choices it is
+   offered, which is the point worth stopping on.
+
+Editing the chooser's wording is the one thing up there that needs a key: on demo
+answers the chooser is a stand-in, so the wording changes nothing. The panel says so,
+but say it out loud as well or someone will spend five minutes proving it.
+
+### In the code, for anyone who cloned it
+
+Only the code has the word lists. Open `src/router/config.ts`, find `POLICY_RULES` or
+`TASK_RULES` near the top, and add **one** word, such as `Django`, to the patterns for
+the lane you want it to reach.
+
+The patterns are regular expressions, so a plain word is already a valid one and
+nobody has to learn the syntax to do the exercise. Say that once and move on. The one
+trap is the `/g` flag, which makes a pattern match every other request; a test rejects
+it, so nobody gets to keep that mistake.
 
 Then try it for free:
 
@@ -253,9 +271,9 @@ so slowly?" already goes to QUALITY without any new rule, because `why is` is in
 QUALITY list. Someone would add a rule, see QUALITY, and learn nothing. The wording
 above matches nothing at all until their rule exists.
 
-The slide offers four ideas that are genuinely not in the file yet: `invoice` /
-`refund` / `chargeback`, `privacy` / `home address`, `ELI5`, and `benchmark` /
-`latency`. Steer people away from `production`, `medical`, `legal` and asking for
+The slide names three words that are genuinely not in the file yet: `invoice`, `ELI5`
+and `benchmark`. `refund`, `chargeback`, `privacy`, `home address` and `latency` are
+free as well. Steer people away from `production`, `medical`, `legal` and asking for
 JSON, which are all already covered.
 
 **Now try this one, and watch it do something you did not expect:**
@@ -298,6 +316,11 @@ word.
 Ask the room what happens to the same request written as "move everyone to
 phishing-resistant sign-in". No rule matches it, so it goes to the chooser. That is
 the honest limit of word matching, and the reason the next section exists.
+
+Anyone who types the passkeys request into the page instead gets the chooser, since
+the page has no word lists. That is not a contradiction, and it is worth naming as it
+happens: the same request, decided by the step that costs money because the free step
+is not there.
 
 ---
 

@@ -54,6 +54,19 @@ export function describeMechanism(m: Mechanism, reason?: string): string {
   return reason ? `${because}. ${reason}.` : `${because}.`;
 }
 
+/**
+ * The "Because" line the route cards print, or nothing when the reason beside
+ * it would only say the same thing again.
+ *
+ * Only a rule earns the line. The reason says why that lane; this says which
+ * words got it there, which is the one thing a reason never carries. The length
+ * step and the chooser both already explain themselves, and printing both put
+ * one sentence on the card twice. A router with no rules prints one row fewer.
+ */
+export function describeRuleMatch(m: Mechanism): string | undefined {
+  return m.kind === "policy" || m.kind === "task" ? describeMechanism(m) : undefined;
+}
+
 /** The colour each lane uses in the slides, so the UI can match. */
 export const LANE_COLOURS: Record<Lane, string> = {
   FAST: "#3B9EF5",

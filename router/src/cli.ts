@@ -15,6 +15,7 @@
  */
 
 import {
+  describeRuleMatch,
   formatCost,
   LANES,
   MockClient,
@@ -72,6 +73,11 @@ function printCard(card: RouteCard): void {
     ["Chose", card.finalLane + (card.held ? "  (nothing was sent)" : "")],
   ];
   if (!card.held) rows.push(["Model", LANES[card.finalLane].model ?? ""]);
+  // The slides show a "Because" line naming the rule that caught the request.
+  // It comes from the router package, so the card and the slide say the same
+  // words, and it is absent for a decision no rule made.
+  const because = describeRuleMatch(card.decision.mechanism);
+  if (because) rows.push(["Because", because]);
   rows.push(["Reason", card.decision.reason]);
 
   if (card.held) {

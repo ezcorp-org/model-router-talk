@@ -4,6 +4,8 @@ import {
   CLASSIFIER_SCHEMA,
   DEFAULT_CONFIG,
   decideLane,
+  describeMechanism,
+  describeRuleMatch,
   formatCost,
   LANE_COLOURS,
   LANES,
@@ -115,24 +117,41 @@ describe("the route card slide", () => {
   // request contained the word "extract", which it does not.
   const prompt = "Pull the to-do items out of these meeting notes.";
 
-  test("the pattern printed on the slide is the pattern in the file, character for character", async () => {
-    // The slide now shows the regex itself rather than a description of it, so
-    // a paraphrase is no longer good enough. If someone edits this pattern, the
-    // slide is wrong on screen and this test says so.
+  test("the line printed on the slide is the line the card prints", async () => {
+    // No regular expression appears anywhere in the deck. The slide shows the
+    // card's own wording, so this compares the two directly. If someone edits
+    // the pattern, the slide is wrong on screen and this test says so.
     const d = await decideLane(prompt, client());
     if (d.mechanism.kind !== "task") throw new Error("expected a job type rule");
-    expect(d.mechanism.pattern).toBe("\\bpull\\b[^.?!]*\\bout of\\b");
+    expect(describeMechanism(d.mechanism)).toBe("A job type rule spotted “pull … out of”.");
+    // The command line and the site build that row with this, so all three
+    // cards say the same words or none of them do.
+    expect(describeRuleMatch(d.mechanism)).toBe("A job type rule spotted “pull … out of”.");
   });
 
-  test("the parts the slide explains are the parts the pattern uses", () => {
-    // The note explains \b and [^.?!]* by name. Both have to still be in there.
-    const pattern = "\\bpull\\b[^.?!]*\\bout of\\b";
-    expect(pattern).toContain("\\b");
-    expect(pattern).toContain("[^.?!]*");
-    // And the claim that "pulling" does not match, which is what \b buys you.
-    expect(new RegExp(pattern, "i").test("Pulling the to-do items out of these notes")).toBe(
-      false,
-    );
+  test("the row is left out where the reason next to it would repeat it", async () => {
+    // A card with two rows saying one thing is the reason this row was missing
+    // in the first place. Only a rule names words a reason cannot.
+    const long = await decideLane("banana ".repeat(200), client());
+    expect(long.mechanism.kind).toBe("length");
+    expect(describeRuleMatch(long.mechanism)).toBeUndefined();
+
+    const chosen = await decideLane("z".repeat(1000), client());
+    expect(chosen.mechanism.kind).toBe("classifier");
+    expect(describeRuleMatch(chosen.mechanism)).toBeUndefined();
+  });
+
+  test("the rule works the way the note describes it", async () => {
+    // The note says the rule looks for "pull", then "out of" later in the same
+    // sentence. Both halves of that sentence are a promise about the pattern.
+    const d = await decideLane(prompt, client());
+    if (d.mechanism.kind !== "task") throw new Error("expected a job type rule");
+    const pattern = new RegExp(d.mechanism.pattern, "i");
+    expect(pattern.test(prompt)).toBe(true);
+    // "pull", not "pulling": the rule matches the word, not the start of one.
+    expect(pattern.test("Pulling the to-do items out of these notes")).toBe(false);
+    // "out of" has to arrive before the full stop does.
+    expect(pattern.test("Pull the dates. Keep the names out of it.")).toBe(false);
   });
 
   test("the reason on the card is the rule's own words", async () => {
@@ -214,10 +233,11 @@ describe("the order slide lists every step the code takes", () => {
   });
 });
 
-describe("the exercise slide asks for rules that do not exist yet", () => {
-  // Four of the five ideas on this slide were already in the file. Someone
-  // would have added a rule, seen nothing change, and concluded they had got
-  // it wrong. These assertions are the slide, in code.
+describe("the exercise asks for rules that do not exist yet", () => {
+  // The code half of the exercise, on the slide's note and in the presenter
+  // guide. Four of these were once offered as ideas while already being in the
+  // file: someone would have added a rule, seen nothing change, and concluded
+  // they had got it wrong. These assertions are that list, in code.
 
   const notYet = [
     "Draft an invoice for a refund",

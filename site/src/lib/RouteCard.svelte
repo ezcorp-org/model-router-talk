@@ -1,5 +1,5 @@
 <script lang="ts">
-  import { formatCost, LANE_COLOURS } from "../../../router/src/router/index.ts";
+  import { describeRuleMatch, formatCost, LANE_COLOURS } from "../../../router/src/router/index.ts";
   import type { RouteCard, RouterConfig } from "../../../router/src/router/index.ts";
 
   interface Props {
@@ -29,14 +29,16 @@
   const allowed = $derived(config.classifierSchema.properties.lane?.enum ?? []);
 
   /**
-   * Why it went where it went.
+   * Which rule caught the request, in the router's own words.
    *
-   * The router package has `describeMechanism`, which opens every classifier
-   * line with "No rule matched". That is true of the CLI and of the router the
-   * talk builds. It is not true here, where there are no rules to not match,
-   * and it said the same thing twice besides. Each decision already carries a
-   * reason that stands on its own, so this card shows that and nothing else.
+   * The deck's route card and the command line print this same line from this
+   * same function, so the three cannot drift apart. It is absent here as things
+   * stand, because this page runs without rules, and `describeRuleMatch` says
+   * why that is the right answer rather than a missing one.
    */
+  const because = $derived(describeRuleMatch(card.decision.mechanism));
+
+  /** The rule's own reason, which stands on its own whatever decided it. */
   const why = $derived(`${card.decision.reason}.`);
 </script>
 
@@ -50,6 +52,11 @@
       <strong class="lane">{card.finalLane}</strong>
       {#if movedUp}<span class="dim">started with {startedAt}, then moved up</span>{/if}
     </dd>
+
+    {#if because}
+      <dt>Because</dt>
+      <dd>{because}</dd>
+    {/if}
 
     <dt>Why</dt>
     <dd>{why}</dd>
